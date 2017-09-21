@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  token: MyString
+  user_token: MyString
+  card_product_token: MyString
+
+two:
+  token: MyString
+  user_token: MyString
+  card_product_token: MyString
