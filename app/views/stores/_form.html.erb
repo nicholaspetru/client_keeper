@@ -1,0 +1,42 @@
+<%= form_with(model: store, local: true) do |form| %>
+  <% if store.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(store.errors.count, "error") %> prohibited this store from being saved:</h2>
+
+      <ul>
+      <% store.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :store_name, class: 'form-control' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_email, class: !@store.claimed ? 'required' : ''  %>
+    <%= form.email_field :contact_email, id: :store_contact_email, class: 'form-control', :required => !@store.claimed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :username, class: !@store.claimed ? 'required' : '' %>
+    <%= form.text_field :username, id: :store_username, class: 'form-control', :required => !@store.claimed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password, class: !@store.claimed ? 'required' : '' %>
+    <%= form.password_field :password, id: :store_password, class: 'form-control', :required => !@store.claimed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.text_field :active, id: :store_active, class: 'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit @store.claimed ? 'Update store' : 'Claim store' %>
+  </div>
+<% end %>

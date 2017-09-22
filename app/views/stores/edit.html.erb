@@ -1,0 +1,6 @@
+<h1><%= @store.claimed ? "Editing" : "Claim" %> Store</h1>
+
+<%= render 'form', store: @store %>
+
+<%= link_to 'Show', @store %> |
+<%= link_to 'Back', stores_path %>

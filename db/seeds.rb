@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+store_list = Store.make_request("https://shared-sandbox-api.marqeta.com/v3/stores?count=25&sort_by=-lastModifiedTime
+")
+
+store_list['data'].each do |store|
+  Store.create(name: store['name'], token: store['token'], active: store['active'], contact_email: store['contact_email'])
+end

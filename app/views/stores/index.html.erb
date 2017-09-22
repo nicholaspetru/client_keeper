@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Stores</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Claimed</th>
+      <th>Contact</th>
+      <th>Active</th>
+      <th>Token</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stores.each do |store| %>
+      <tr>
+        <td><%= store.name %></td>
+        <% if store.claimed %>
+          <td><%= link_to "Login", login_path %></td>
+        <% else %>
+          <td><%= link_to 'Claim', edit_store_path(store) %></td>
+        <% end %>
+        <td><%= store.contact_email %></td>
+        <td><%= store.active %></td>
+        <td><%= store.token %></td>
+        <td><%= link_to 'view', store %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New store', new_store_path %>

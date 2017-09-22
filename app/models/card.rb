@@ -4,6 +4,7 @@ class Card < ApplicationRecord
 
   belongs_to :card_product
   belongs_to :user
+  has_many :transaction
 
   @@application_token = 'user19081505171746'
   @@master_token = '246476e0-cc3a-4994-9868-57a3ce6ace53'

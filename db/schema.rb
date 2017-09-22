@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170921185929) do
+ActiveRecord::Schema.define(version: 20170922032228) do
 
   create_table "card_products", force: :cascade do |t|
     t.string "name"
@@ -35,6 +35,10 @@ ActiveRecord::Schema.define(version: 20170921185929) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
+    t.string "password"
+    t.boolean "claimed", default: false, null: false
+    t.string "password_digest"
   end
 
   create_table "transactions", force: :cascade do |t|

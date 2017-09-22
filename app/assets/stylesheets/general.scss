@@ -1,0 +1,26 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "header.scss";
+
+body div.container {
+  padding: 10px 30px;
+}
+
+th, td {
+  text-align: left;
+  padding-right: 5px;
+}
+
+
+label.required:after{
+  content: " *";
+  color: red;
+}
+
+input.form-control {
+  max-width: 300px;
+}
+
+.btn {
+  margin-top: 10px;
+}
