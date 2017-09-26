@@ -10,7 +10,6 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    puts "user: #{@user}"
     @user ||= User.make_request(@@base_url + @user.token)
   end
 
@@ -25,22 +24,28 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new(user_params)
-
     @body = {
-      :first_name => @user.first_name,
-      :last_name => @user.last_name,
-      :email => @user.email,
-      :balance => @user.balance
+      :first_name => params['user']['first_name'],
+      :last_name => params['user']['last_name'],
+      :email => params['user']['email'],
+      :address1 => params['user']['address1'],
+      :city => params['user']['city'],
+      :state => params['user']['state'],
+      :zip => params['user']['zip']
     }.to_json
 
-    @response = User.make_request(@@base_url, @body)
-    puts @response['token']
-    @user.token = @response['token']
+    @response = User.post_request(@@base_url, @body)
+
+    @user = User.create(
+      first_name: @response['first_name'],
+      last_name: @response['last_name'],
+      token: @response['token'],
+    ) if !@response['token'].nil?
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        flash[:success] = "New user successfully created!"
+        format.html { redirect_to @user }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
@@ -77,6 +82,6 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :balance)
+      params.require(:user).permit(:first_name, :last_name, :token)
     end
 end

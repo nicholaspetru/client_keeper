@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :cards
   resources :users
   resources :stores
+  resources :card_products
   root to: 'stores#index'
   get    '/signup',  to: 'stores#new'
   get    '/login',   to: 'sessions#new'

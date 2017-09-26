@@ -1,31 +1,25 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @store.name %>
-</p>
-
-<p>
-  <strong>Contact email:</strong>
-  <%= @store.contact_email %>
-</p>
-
-<% if current_store == @store %>
+<% if current_store.token == @page_store['token'] %>
   <p>
     <strong>Username:</strong>
-    <%= @store.username %>
+    <%= @current_store.username %>
+  </p>
+
+  <% @store.each do |key, value| %>
+    <p>
+      <strong><%= key %>:</strong>
+      <%= value %>
+    </p>
+  <% end %>
+<% else %>
+  <p>
+    <strong>Name:</strong>
+    <%= @page_store.name %>
   </p>
 <% end %>
 
-<p>
-  <strong>Active:</strong>
-  <%= @store.active %>
-</p>
-
-<p>
-  <strong>Token:</strong>
-  <%= @store.token %>
-</p>
-
-<%= link_to 'Edit', edit_store_path(@store) %> |
+<% if current_store.token == @page_store['token'] %>
+  <%= link_to 'Edit', edit_store_path(@store) %> |
+<% end %>
 <%= link_to 'Back', stores_path %>

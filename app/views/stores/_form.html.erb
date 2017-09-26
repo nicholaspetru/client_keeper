@@ -12,23 +12,43 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :store_name, class: 'form-control' %>
+    <%= form.label :name, class: 'required' %>
+    <%= form.text_field :name, id: :store_name, class: 'form-control', :required => true %>
   </div>
 
   <div class="field">
-    <%= form.label :contact_email, class: !@store.claimed ? 'required' : ''  %>
-    <%= form.email_field :contact_email, id: :store_contact_email, class: 'form-control', :required => !@store.claimed %>
+    <%= form.label :contact_email %>
+    <%= form.email_field :contact_email, id: :store_contact_email, class: 'form-control' %>
   </div>
 
   <div class="field">
-    <%= form.label :username, class: !@store.claimed ? 'required' : '' %>
-    <%= form.text_field :username, id: :store_username, class: 'form-control', :required => !@store.claimed %>
+    <%= form.label :username, class: 'required' %>
+    <%= form.text_field :username, id: :store_username, class: 'form-control', :required => true %>
   </div>
 
   <div class="field">
-    <%= form.label :password, class: !@store.claimed ? 'required' : '' %>
-    <%= form.password_field :password, id: :store_password, class: 'form-control', :required => !@store.claimed %>
+    <%= form.label :password, class: 'required' %>
+    <%= form.password_field :password, id: :store_password, class: 'form-control', :required => true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address1, class: 'required' %>
+    <%= form.text_field :address1, id: :store_address1, class: 'form-control', :required => true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :city, class: 'required' %>
+    <%= form.text_field :city, id: :store_city, class: 'form-control', :required => true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state, class: 'required' %>
+    <%= form.text_field :state, id: :store_state, class: 'form-control', :required => true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :zip, class: 'required' %>
+    <%= form.text_field :zip, id: :store_zip, class: 'form-control', :required => true %>
   </div>
 
   <div class="field">

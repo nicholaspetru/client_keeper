@@ -2,43 +2,51 @@ class StoresController < ApplicationController
   before_action :set_store, only: [:show, :edit, :update, :destroy]
 
   @@base_url = "https://shared-sandbox-api.marqeta.com/v3/stores/"
+  @@merchant_start_count = 1
 
-  # GET /stores
   def index
     @stores = Store.all
   end
 
-  # GET /stores/1
   def show
-    puts "store: #{@store}"
-    @store ||= Store.make_request(@@base_url + @store.token)
+    @page_store = Store.find(params[:id])
+    if logged_in?
+      @store = Store.get_request(@@base_url + current_store.token)
+    end
   end
 
-  # GET /stores/new
   def new
     @store = Store.new
   end
 
-  # GET /stores/1/edit
   def edit
   end
 
-  # POST /stores
   def create
-    @store = Store.new(store_params)
+    @body = {
+      :name => params['store']['name'],
+      :state => params['store']['state'],
+      :city => params['store']['city'],
+      :address1 => params['store']['address1'],
+      :zip => params['store']['zip'],
+      :mid => rand((10 ** 15) - 1),
+      :contact_email => params['store']['contact_email'],
+      :active => params['store']['active'],
+      :merchant_token => get_merchant_token
+    }.to_json
 
-    if !@store.username.nil? && !@store.password.nil?
-      @store[:claimed] = true
+    @response = Store.post_request(@@base_url, @body)
+    while @response['error_code'] == "400101"
+      @body['mid'] = rand((10 ** 15) - 1)
+      @response = Store.post_request(@@base_url, @body)
     end
 
-    @body = {
-      :name => @store.name,
-      :token => @store.token,
-      :contact_email => @store.contact_email,
-      :username => @store.username,
-      :password => @store.password,
-      :active => @store.active
-    }.to_json
+    @store = Store.create(
+      name: @response['name'],
+      token: @response['token'],
+      username: params['store']['username'],
+      password: params['store']['password']
+    ) if !@response['token'].nil?
 
     respond_to do |format|
       if @store.save
@@ -52,13 +60,24 @@ class StoresController < ApplicationController
     end
   end
 
-  # PATCH/PUT /stores/1
+  def get_merchant_token
+    response = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/merchants?count=1&start_index=#{@@merchant_start_count}")
+    @@merchant_start_count += 1 if response['data']
+    if response['data']
+      response['data'][0]['token']
+    else
+      "05e63015-202b-4af6-bac2-e18d9e89b4f0"
+    end
+  end
+
   def update
     if !@store.username.nil? && !@store.password.nil?
       puts 'STORE CLAIMED'
       @store[:claimed] = true
     end
+
     respond_to do |format|
+      # put request instead
       if @store.update(store_params)
         flash[:success] = "Store successfully updated"
         format.html { redirect_to @store }
@@ -70,7 +89,6 @@ class StoresController < ApplicationController
     end
   end
 
-  # DELETE /stores/1
   def destroy
     @store.destroy
     respond_to do |format|
@@ -80,11 +98,12 @@ class StoresController < ApplicationController
   end
 
   private
+    helper_method :get_merchant_token
     def set_store
       @store = Store.find(params[:id])
     end
 
     def store_params
-      params.require(:store).permit(:name, :contact_email, :active, :token, :username, :password, :claimed)
+      params.require(:store).permit(:name, :token, :username, :password, :claimed)
     end
 end

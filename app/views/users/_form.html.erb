@@ -12,23 +12,38 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name, id: :user_first_name %>
+    <%= form.label :first_name, class: 'required' %>
+    <%= form.text_field :first_name, id: :user_first_name, :required => true %>
   </div>
 
   <div class="field">
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name, id: :user_last_name %>
+    <%= form.label :last_name, class: 'required' %>
+    <%= form.text_field :last_name, id: :user_last_name, :required => true %>
   </div>
 
   <div class="field">
     <%= form.label :email %>
-    <%= form.text_field :email, id: :user_email %>
+    <%= form.email_field :email, id: :user_email %>
   </div>
 
   <div class="field">
-    <%= form.label :balance %>
-    <%= form.number_field :balance, id: :user_balance %>
+    <%= form.label :address1 %>
+    <%= form.text_field :address1, id: :user_address1 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :city %>
+    <%= form.text_field :city, id: :user_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state %>
+    <%= form.text_field :state, id: :user_state %>
+  </div>
+
+  <div class="field">
+    <%= form.label :zip %>
+    <%= form.text_field :zip, id: :user_zip %>
   </div>
 
   <div class="actions">

@@ -1,7 +1,12 @@
-ul.nav.navbar-nav {
-  li.dropdown:hover {
-    .dropdown-menu {
-      display: block;
+nav {
+  div.current-user-block {
+
+  }
+  ul.nav.navbar-nav {
+    li.dropdown:hover {
+      .dropdown-menu {
+        display: block;
+      }
     }
   }
 }
