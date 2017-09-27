@@ -18,7 +18,11 @@
     <tbody>
       <% @cards['data'].each do |card| %>
         <tr>
-          <td>TEMP CP</td>
+          <td>
+            <% unless card['card_product_token'] == 'card_product_token' %>
+              <%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %>
+            <% end %>
+          </td>
           <td><%= card['expiration'] %></td>
           <td><%= card['state'] %></td>
           <td><%= card['fulfillment_status'] %></td>

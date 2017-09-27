@@ -33,7 +33,6 @@ class Card < ApplicationRecord
       :account_type => 'credit'
     }.to_json
     response = Card.post_request("#{@@base_url}simulate/financial/balanceinquiry", @body)
-    puts response['transaction']['gpa']
     response['transaction']['gpa']
   end
 

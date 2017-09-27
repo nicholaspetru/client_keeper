@@ -26,11 +26,12 @@ class CardsController < ApplicationController
   end
 
   def create
+    @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
     @client = Client.find(params[:client_id])
     @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
     @body = {
       :user_token => @client.user_token,
-      :card_product_token => params['card']['card_product_token'],
+      :card_product_token => params['card_product_token'],
       :fulfillment => {
         :shipping => {
           :recipient_address => {
@@ -64,7 +65,9 @@ class CardsController < ApplicationController
 
   def add_funds
     @client = Client.params[:client_id]
-    Card.add_funds(@client.user_token, params['amount'], params['card'])
+    @card_data = retrieve_card_data(params['card_token'])
+    @response = Card.add_funds(@client.user_token, params['amount'], params['card'])
+    puts "ADD FUND RESPONSE: #{@response}"
     redirect_to client_cards_path(@client)
   end
 
@@ -90,6 +93,10 @@ class CardsController < ApplicationController
 
   def retrieve_user_data(user_token)
     User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
+  end
+
+  def retrieve_card_data(card_token)
+    Card.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/#{card_token}").parsed_response
   end
 
   def find_funding_source(user_token, card_response)

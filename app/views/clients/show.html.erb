@@ -45,8 +45,10 @@
       <% else %>
         <% @user_cards['data'].each do |card| %>
           <li>
-            <%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %>
-            ending in <%= card['last_four'] %>:
+            <% unless card['card_product_token'] == 'card_product_token' %>
+              <%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %>
+              ending in <%= card['last_four'] %>:
+            <% end %>
             <ul>
               <li>Expires: <%= card['expiration'] %></li>
               <li>State: <%= card['state'] %></li>

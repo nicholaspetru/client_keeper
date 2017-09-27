@@ -3,7 +3,7 @@
     <br />
     <%= form.text_field :amount, class: 'small-form form-control' %>
     <div class="actions add-fund-button">
-      <%= hidden_field_tag(:card, card) %>
+      <%= hidden_field_tag(:card_token, card['token']) %>
       <%= form.submit 'Go!' %>
     </div>
   </div>
