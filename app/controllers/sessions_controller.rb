@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if @store && @store.authenticate(params[:session][:password])
       flash[:success] = 'Welcome back!'
       login(@store)
-      redirect_to @store
+      redirect_to clients_path
     else
       flash[:danger] = 'Invalid username and/or password'
       render 'new'

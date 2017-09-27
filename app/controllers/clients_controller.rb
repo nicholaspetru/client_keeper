@@ -62,7 +62,7 @@ class ClientsController < ApplicationController
     helper_method :assemble_full_name
     def require_login
       unless logged_in?
-        flash[:danger] = 'You must login to create a transaction.'
+        flash[:danger] = 'You must login to access clients.'
         redirect_to '/login'
       end
     end

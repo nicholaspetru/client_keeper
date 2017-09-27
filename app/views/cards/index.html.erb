@@ -6,19 +6,22 @@
   <table>
     <thead>
       <tr>
-        <th>Token</th>
-        <th>User token</th>
-        <th>Card product token</th>
-        <th colspan="3"></th>
+        <th>Card Product</th>
+        <th>Expires</th>
+        <th>State</th>
+        <th>Fulfillment status</th>
+        <th>Barcode</th>
       </tr>
     </thead>
 
     <tbody>
       <% @cards['data'].each do |card| %>
         <tr>
-          <td><%= card['token'] %></td>
-          <td><%= card['user_token'] %></td>
-          <td><%= card['card_product_token'] %></td>
+          <td><%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %></td>
+          <td><%= card['expiration'] %></td>
+          <td><%= card['state'] %></td>
+          <td><%= card['fulfillment_status'] %></td>
+          <td><%= card['barcode'] %></td>
         </tr>
       <% end %>
     </tbody>

@@ -11,8 +11,7 @@ class Card < ApplicationRecord
   end
 
   def self.post_request(request_url, body=false)
-    response = ApiModule.api_post_request(request_url, body)
-    response
+    ApiModule.api_post_request(request_url, body)
   end
 
   def self.put_request(request_url, body=false)

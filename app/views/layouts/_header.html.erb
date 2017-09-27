@@ -10,7 +10,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Client keeper</a>
+      <%= link_to 'Client keeper', logged_in? ? clients_path : '/login', class: "navbar-brand" %>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -25,12 +25,13 @@
       <ul class="nav navbar-nav navbar-right">
         <% if logged_in? %>
           <li class="dropdown">
-            &nbsp;<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            &nbsp;
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               My account
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <li><%= link_to "View", current_store %></li>
+              <li><%= link_to "View", clients_path %></li>
               <li><%= link_to "Edit", edit_store_path(current_store) %></li>
               <li><%= link_to "Logout", logout_path, method: :delete %></li>
               <li role="separator" class="divider"></li>

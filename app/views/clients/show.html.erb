@@ -42,7 +42,16 @@
         <li>Note that all cardholder address info must be filled out to add a card</li>
       <% else %>
         <% @user_cards['data'].each do |card| %>
-          <li><%= card %></li>
+          <li>
+            <%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %>
+            ending in <%= card['last_four'] %>:
+            <ul>
+              <li>Expires: <%= card['expiration'] %></li>
+              <li>State: <%= card['state'] %></li>
+              <li>Fulfillment status: <%= card['fulfillment_status'] %></li>
+              <li>Barcode: <%= card['barcode'] %></li>
+            </ul>
+          </li>
         <% end %>
       <% end %>
     </ul>
