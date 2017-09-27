@@ -50,7 +50,7 @@ class CardsController < ApplicationController
     respond_to do |format|
       if @response['error_code'].nil?
         @success_redirect = "/clients/#{params[:client_id]}/cards"
-        flash[:success] = ['Card was successfully created.']
+        flash[:success] = 'Card was successfully created. '
         find_funding_source(@client.user_token, @response)
         format.html { redirect_to @success_redirect }
         format.json { render :show, status: :created, location: @success_redirect }
@@ -90,7 +90,7 @@ class CardsController < ApplicationController
     fund = Card.get_funding_source(user_token, card_response)
     if fund[:funding_source]['error_code'].nil?
       message = fund[:existing] ? 'Existing funding source identified' : 'New funding source successfully established'
-      flash[:success] << message
+      flash[:success] += message
     else
       flash[:danger] = fund[:funding_source]['error_message']
     end

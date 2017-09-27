@@ -50,6 +50,7 @@ class StoresController < ApplicationController
 
     respond_to do |format|
       if @store.save
+        login @store
         flash[:success] = "New store successfully created!"
         format.html { redirect_to @store }
         format.json { render :show, status: :created, location: @store }

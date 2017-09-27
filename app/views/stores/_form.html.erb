@@ -57,6 +57,6 @@
   </div>
 
   <div class="actions">
-    <%= form.submit 'Update store' %>
+    <%= form.submit logged_in? ? 'Update store' : 'Create store' %>
   </div>
 <% end %>

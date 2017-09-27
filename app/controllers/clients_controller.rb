@@ -39,12 +39,18 @@ class ClientsController < ApplicationController
   end
 
   def activate
+    @client = Client.find(params[:client_id])
     @body = {
       :card_token => params['card_token'],
       :state => params['status'],
       :channel => 'API'
     }.to_json
     @request = Client.post_card_transitions(@body)
+    puts "ACTREQ: #{@request}"
+    unless @request['error_code'].nil?
+      flash[:danger] = @request['error_message']
+    end
+    redirect_to client_path(@client)
   end
 
   def destroy

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post '/transactions/begin' => 'transactions#begin_with_client'
   post '/clients/:client_id' => 'clients#activate'
 
-  root to: 'stores#index'
+  root to: 'clients#index'
   get    '/signup',  to: 'stores#new'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
