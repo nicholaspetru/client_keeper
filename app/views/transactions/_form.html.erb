@@ -1,4 +1,4 @@
-<%= form_with(model: transaction, local: true) do |form| %>
+<%= form_for([client, transaction]) do |form| %>
   <% if transaction.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
@@ -9,25 +9,17 @@
       <% end %>
       </ul>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :client, class: 'required' %>
-    <%= form.select :token, options_for_select(@clients), prompt: 'Please Select' %>
-  </div>
-
-  <!-- TODO: based on the user selection, produce list of user cards. Allow addition of user cards from here (link to card form) -->
-  <div class="field">
-    <%= form.label :card_token, class: 'required' %>
-    <%= form.password_field :card_token, id: :transaction_card_token, class: 'form-control', :required => true %>
+  <% end %>  <div class="field">
+    <%= form.label :card, class: 'required' %>
+    <%= form.select :card_token, @card_list, prompt: 'Please Select' %>
   </div>
 
   <div class="field">
     <%= form.label :amount, class: 'required' %>
-    <%= form.password_field :amount, id: :transaction_amount, class: 'form-control', :required => true %>
+    <%= form.text_field :amount, id: :transaction_amount, class: 'form-control', :required => true %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Submit transaction'%>
   </div>
 <% end %>

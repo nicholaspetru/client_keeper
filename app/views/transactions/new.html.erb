@@ -1,5 +1,5 @@
-<h1>New Transaction</h1>
+<h3>New Transaction with <%= @user['first_name'] %> <%= @user['last_name'] %></h3>
+<br />
+<%= render 'form', client: @client, transaction: @transaction %>
 
-<%= render 'form', transaction: @transaction %>
-
-<%= link_to 'Back', transactions_path %>
+<%= link_to 'Begin new transaction', transactions_begin_path %>

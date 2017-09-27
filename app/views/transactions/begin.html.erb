@@ -1,0 +1,28 @@
+<h1>Begin Transaction</h1>
+
+<%= form_with do |form| %>
+  <% if @transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@transaction.errors.count, "error") %> prohibited this @transaction from being saved:</h2>
+
+      <ul>
+      <% @transaction.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :client, class: 'required' %>
+    <%= form.select :user_token, @clients, prompt: 'Please Select' %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit 'Continue transaction'%>
+  </div>
+<% end %>
+
+
+<%= link_to 'All clients', clients_path %>
