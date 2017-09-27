@@ -1,19 +1,38 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>First name:</strong>
-  <%= @user.first_name %>
-</p>
+  <h1>
+    Client: <%= @user['first_name'] %> <%= @user['last_name'] %>
+  </h1>
 
-<p>
-  <strong>Last name:</strong>
-  <%= @user.last_name %>
-</p>
+  <br />
 
-<p>
-  <strong>Token:</strong>
-  <%= @user.token %>
-</p>
+  <div class="basic-client-info">
+    <h3>Basic info:</h3>
+    <p>
+      <strong>Email: </strong><%= @user['email'] %>
+    </p>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+    <p>
+      <strong>Address: </strong><%= @user['address1'] %>
+    </p>
+
+    <p>
+      <strong>City: </strong><%= @user['city'] %>
+    </p>
+
+    <p>
+      <strong>State: </strong><%= @user['state'] %>
+    </p>
+
+    <p>
+      <strong>Zip:</strong><%= @user['zip'] %>
+    </p>
+
+    <p>
+      <strong>Active: </strong><%= @user['active'] %>
+    </p>
+  </div>
+
+<%= link_to 'Edit client', edit_user_path(@local_user) %>
+<br />
+<%= link_to 'All clients', clients_path %>

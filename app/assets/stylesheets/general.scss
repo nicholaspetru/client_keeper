@@ -6,11 +6,33 @@ body div.container {
   padding: 10px 30px;
 }
 
-th, td {
-  text-align: left;
-  padding-right: 5px;
+a:after {
+  content: " >>"
+}
+td a:after {
+  content: none;
 }
 
+a {
+  text-decoration: none !important;
+  &:after {
+    -webkit-transition: margin-left .5s;
+    transition: margin-left .5s;
+  }
+  &:hover {
+    cursor: pointer;
+    color: #6A63FF;
+    background-color: none !important;
+    &:after {
+      margin-left: 4px;
+    }
+  }
+}
+
+th, td {
+  text-align: left;
+  padding-right: 8px;
+}
 
 label.required:after{
   content: " *";

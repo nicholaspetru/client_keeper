@@ -6,9 +6,6 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Claimed</th>
-      <th>Contact</th>
-      <th>Active</th>
       <th>Token</th>
       <th colspan="2"></th>
     </tr>
@@ -18,13 +15,6 @@
     <% @stores.each do |store| %>
       <tr>
         <td><%= store.name %></td>
-        <% if store.claimed %>
-          <td><%= link_to "Login", login_path %></td>
-        <% else %>
-          <td><%= link_to 'Claim', edit_store_path(store) %></td>
-        <% end %>
-        <td><%= store.contact_email %></td>
-        <td><%= store.active %></td>
         <td><%= store.token %></td>
         <td><%= link_to 'view', store %></td>
       </tr>

@@ -1,4 +1,7 @@
 nav {
+  a:after {
+    content: none !important;
+  }
   div.current-user-block {
 
   }

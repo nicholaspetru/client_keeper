@@ -2,11 +2,14 @@ require 'api_module'
 class Transaction < ApplicationRecord
   include ApiModule
 
-  belongs_to :card
-  belongs_to :store
-  belongs_to :user
+  has_one :card
+  has_one :store
+  has_one :client
+  has_one :user
 
-  def self.make_request(request_url, body=false)
-    ApiModule.api_request(request_url, body)
+  def full_name(user_token)
+    response = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}")
+    user_data = response.parsed_response
+    return user_data['first_name'] + user_data['last_name']
   end
 end

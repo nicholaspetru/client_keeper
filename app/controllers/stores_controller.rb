@@ -71,11 +71,6 @@ class StoresController < ApplicationController
   end
 
   def update
-    if !@store.username.nil? && !@store.password.nil?
-      puts 'STORE CLAIMED'
-      @store[:claimed] = true
-    end
-
     respond_to do |format|
       # put request instead
       if @store.update(store_params)
@@ -104,6 +99,6 @@ class StoresController < ApplicationController
     end
 
     def store_params
-      params.require(:store).permit(:name, :token, :username, :password, :claimed)
+      params.require(:store).permit(:name, :token, :username, :password)
     end
 end

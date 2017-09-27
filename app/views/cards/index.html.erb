@@ -1,31 +1,36 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Cards</h1>
+<h1><%= @user['first_name'] %> <%= @user['last_name'] %>'s cards</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Token</th>
-      <th>User token</th>
-      <th>Card product token</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @cards.each do |card| %>
+<% unless @cards['count'] == 0 %>
+  <table>
+    <thead>
       <tr>
-        <td><%= card.token %></td>
-        <td><%= card.user_token %></td>
-        <td><%= card.card_product_token %></td>
-        <td><%= link_to 'Show', card %></td>
-        <td><%= link_to 'Edit', edit_card_path(card) %></td>
-        <td><%= link_to 'Destroy', card, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Token</th>
+        <th>User token</th>
+        <th>Card product token</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @cards['data'].each do |card| %>
+        <tr>
+          <td><%= card['token'] %></td>
+          <td><%= card['user_token'] %></td>
+          <td><%= card['card_product_token'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>
+    No cards available
+  </p>
+<% end %>
 
 <br>
 
-<%= link_to 'New Card', new_card_path %>
+<%= link_to 'Add card', new_client_card_path(@client.id) %>
+<br />
+<%= link_to 'View client', client_path(@client) %>

@@ -1,16 +1,4 @@
 <%= form_with(model: user, local: true) do |form| %>
-  <% if user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-      <ul>
-      <% user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="field">
     <%= form.label :first_name, class: 'required' %>
     <%= form.text_field :first_name, id: :user_first_name, :required => true %>
@@ -28,22 +16,22 @@
 
   <div class="field">
     <%= form.label :address1 %>
-    <%= form.text_field :address1, id: :user_address1 %>
+    <%= form.text_field :address1, value: @user['address1'], id: :user_address1, :required => true %>
   </div>
 
   <div class="field">
     <%= form.label :city %>
-    <%= form.text_field :city, id: :user_city %>
+    <%= form.text_field :city, value: @user['city'], id: :user_city, :required => true %>
   </div>
 
   <div class="field">
     <%= form.label :state %>
-    <%= form.text_field :state, id: :user_state %>
+    <%= form.text_field :state, value: @user['state'], id: :user_state, :required => true %>
   </div>
 
   <div class="field">
     <%= form.label :zip %>
-    <%= form.text_field :zip, id: :user_zip %>
+    <%= form.text_field :zip, value: @user['zip'], id: :user_zip, :required => true %>
   </div>
 
   <div class="actions">

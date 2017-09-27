@@ -4,7 +4,12 @@ class User < ApplicationRecord
 
   has_many :card
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   def self.get_request(request_url)
+    puts request_url
     ApiModule.api_get_request(request_url)
   end
 

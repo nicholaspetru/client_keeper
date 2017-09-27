@@ -4,9 +4,18 @@ class Card < ApplicationRecord
 
   belongs_to :card_product
   belongs_to :user
-  has_many :transaction
+  belongs_to :client
 
-  def self.make_request(request_url, body=false)
-    ApiModule.api_request(request_url, body)
+  def self.get_request(request_url)
+    ApiModule.api_get_request(request_url)
+  end
+
+  def self.post_request(request_url, body=false)
+    response = ApiModule.api_post_request(request_url, body)
+    response
+  end
+
+  def self.put_request(request_url, body=false)
+    ApiModule.api_put_request(request_url, body)
   end
 end

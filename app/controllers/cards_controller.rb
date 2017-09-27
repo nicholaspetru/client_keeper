@@ -1,44 +1,66 @@
 class CardsController < ApplicationController
   before_action :set_card, only: [:show, :edit, :update, :destroy]
 
-  # GET /cards
-  # GET /cards.json
+  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/cards/"
+
   def index
-    @cards = Card.all
+    @client = Client.find(params[:client_id])
+    @user = retrieve_user_data(@client.user_token)
+    @cards = Card.get_request("#{@@base_url}user/#{@client.user_token}")
   end
 
-  # GET /cards/1
-  # GET /cards/1.json
   def show
+    @client = Client.find(params[:id])
+    @card = Card.get_request(@@base_url + @user_token)
   end
 
-  # GET /cards/new
   def new
     @card = Card.new
+    @client = Client.find(params[:client_id])
+    @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
+    @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
+    @success_redirect = "/clients/#{params[:client_id]}/cards"
   end
 
-  # GET /cards/1/edit
   def edit
   end
 
-  # POST /cards
-  # POST /cards.json
   def create
-    @card = Card.new(card_params)
+    @client = Client.find(params[:client_id])
+    @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
+    @body = {
+      :user_token => @client.user_token,
+      :card_product_token => params['card']['card_product_token'],
+      :fulfillment => {
+        :shipping => {
+          :recipient_address => {
+            :first_name => @user['first_name'],
+            :last_name => @user['last_name'],
+            :address1 => @user['address1'],
+            :city => @user['city'],
+            :state => @user['state'],
+            :zip => @user['zip']
+          }
+        }
+      }
+    }.to_json
+
+    @request = Card.post_request(@@base_url, @body)
 
     respond_to do |format|
-      if @card.save
-        format.html { redirect_to @card, notice: 'Card was successfully created.' }
-        format.json { render :show, status: :created, location: @card }
+      if @request['error_code'].nil?
+        @success_redirect = "/clients/#{params[:client_id]}/cards"
+        flash[:success] = 'Card was successfully created.'
+        format.html { redirect_to @success_redirect }
+        format.json { render :show, status: :created, location: @success_redirect }
       else
+        flash[:danger] = @request['error_message']
         format.html { render :new }
-        format.json { render json: @card.errors, status: :unprocessable_entity }
+        format.json { render json: @request.error_code, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /cards/1
-  # PATCH/PUT /cards/1.json
   def update
     respond_to do |format|
       if @card.update(card_params)
@@ -51,8 +73,6 @@ class CardsController < ApplicationController
     end
   end
 
-  # DELETE /cards/1
-  # DELETE /cards/1.json
   def destroy
     @card.destroy
     respond_to do |format|
@@ -61,13 +81,15 @@ class CardsController < ApplicationController
     end
   end
 
+  def retrieve_user_data(user_token)
+    User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
+  end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_card
-      @card = Card.find(params[:id])
+      @card = Card.find(params[:client_id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def card_params
       params.require(:card).permit(:token, :user_token, :card_product_token)
     end

@@ -2,10 +2,13 @@ Rails.application.routes.draw do
   get 'sessions/new'
 
   resources :transactions
-  resources :cards
   resources :users
   resources :stores
   resources :card_products
+  resources :clients do
+    resources :cards
+  end
+
   root to: 'stores#index'
   get    '/signup',  to: 'stores#new'
   get    '/login',   to: 'sessions#new'

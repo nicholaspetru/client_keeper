@@ -11,17 +11,15 @@
     </div>
   <% end %>
 
-  <!-- TODO: once many-many object created, display client dropdown -->
   <div class="field">
-    <%= form.label "Client", class: 'required' %>
-    <%= form.password_field :user_token, id: :transaction_user_token, class: 'form-control', :required => true %>
+    <%= form.label :client, class: 'required' %>
+    <%= form.select :token, options_for_select(@clients), prompt: 'Please Select' %>
   </div>
 
   <!-- TODO: based on the user selection, produce list of user cards. Allow addition of user cards from here (link to card form) -->
   <div class="field">
     <%= form.label :card_token, class: 'required' %>
     <%= form.password_field :card_token, id: :transaction_card_token, class: 'form-control', :required => true %>
-    <%= link_to 'Add new card', new_card_path %>
   </div>
 
   <div class="field">

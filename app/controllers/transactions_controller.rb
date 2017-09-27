@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+  before_action :require_login
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -10,19 +11,19 @@ class TransactionsController < ApplicationController
   end
 
   def new
-    if !logged_in?
-      flash[:danger] = 'You must login to create a transaction'
-      redirect_to '/login'
-    end
     @transaction = Transaction.new
-    @store = current_store
-    # TODO: get users by has_many has_many association object
-    # ^ many stores // many users
-    @users = User.all
+    @local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token)
+    @clients = @local_clients.map { |lc| [get_full_name(lc), lc] }
+  end
+
+  def get_full_name(user_token)
+    response = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}")
+    user_data = response.parsed_response
+    return "#{user_data['first_name']} #{user_data['last_name']}"
   end
 
   def create
-    @transaction = Transaction.new(transaction_params)
+    @store = current_store
 
     respond_to do |format|
       # post request instead
@@ -60,6 +61,14 @@ class TransactionsController < ApplicationController
   end
 
   private
+    helper_method :get_full_name
+    def require_login
+      unless logged_in?
+        flash[:danger] = 'You must login to create a transaction.'
+        redirect_to '/login'
+      end
+    end
+
     def set_transaction
       @transaction = Transaction.find(params[:id])
     end

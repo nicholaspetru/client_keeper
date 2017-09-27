@@ -1,4 +1,4 @@
-<%= form_with(model: card, local: true) do |form| %>
+<%= form_for([client, card]) do |form| %>
   <% if card.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(card.errors.count, "error") %> prohibited this card from being saved:</h2>
@@ -12,18 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :token %>
-    <%= form.text_field :token, id: :card_token %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_token %>
-    <%= form.text_field :user_token, id: :card_user_token %>
-  </div>
-
-  <div class="field">
-    <%= form.label :card_product_token %>
-    <%= form.text_field :card_product_token, id: :card_card_product_token %>
+    <%= form.label :card_product, class: 'required' %>
+    <%= form.select :card_product_token, options_for_select(@card_products), prompt: 'Please Select', required: true %>
   </div>
 
   <div class="actions">

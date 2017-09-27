@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+  <h1>
+    Client: <%= @user_data['first_name'] %> <%= @user_data['last_name'] %>
+  </h1>
+
+  <%= link_to 'Add card', "/clients/#{@client.id}/cards/new" %>
+
+  <br />
+
+  <div class="basic-client-info">
+    <h3>Basic info:</h3>
+    <p>
+      <strong>Email: </strong><%= @user_data['email'] %>
+    </p>
+
+    <p>
+      <strong>Address: </strong><%= @user_data['address1'] %>
+    </p>
+
+    <p>
+      <strong>City: </strong><%= @user_data['city'] %>
+    </p>
+
+    <p>
+      <strong>State: </strong><%= @user_data['state'] %>
+    </p>
+
+    <p>
+      <strong>Zip:</strong><%= @user_data['zip'] %>
+    </p>
+
+    <p>
+      <strong>Active: </strong><%= @user_data['active'] %>
+    </p>
+  </div>
+  <div class="client-cards">
+    <h3>Cards:</h3>
+    <ul>
+      <% if @user_cards['count'] == 0 %>
+        <li>No cards available</li>
+        <li>Note that all cardholder address info must be filled out to add a card</li>
+      <% else %>
+        <% @user_cards['data'].each do |card| %>
+          <li><%= card %></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+
+<%= link_to 'Edit client', edit_user_path(@local_user) %>
+<br />
+<%= link_to 'All clients', clients_path %>
