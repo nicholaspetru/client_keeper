@@ -6,3 +6,9 @@
   display: table-cell;
   width: 50vw;
 }
+
+.card-activation-form {
+  select, .status-change-button {
+    display: inline-block;
+  }
+}

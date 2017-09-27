@@ -47,13 +47,15 @@ class TransactionsController < ApplicationController
     }.to_json
 
     @response = Transaction.post_request(@@simulate_base_url, @body)
+    @transaction = @response['transaction']
+    puts "TRANSACTION RESPONSE: #{@transaction}"
 
-    puts "TRANSACTION RESPONSE: #{@response}"
-
-    unless @response['error_code'].nil?
+    if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
       flash[:danger] = @response['error_message']
+      flash[:danger] = "#{@transaction['state']}: #{@transaction['response']['memo']}"
+      redirect_to new_client_transaction_path(@client)
     else
-      flash[:success] = "New transaction successfully created!"
+      flash[:success] = "#{@transaction['state']}: New transaction successfully created!"
       redirect_to client_path(@client)
     end
   end

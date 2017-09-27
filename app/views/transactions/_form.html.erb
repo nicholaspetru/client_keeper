@@ -9,9 +9,15 @@
       <% end %>
       </ul>
     </div>
-  <% end %>  <div class="field">
+  <% end %>
+
+  <div class="field">
     <%= form.label :card, class: 'required' %>
     <%= form.select :card_token, @card_list, prompt: 'Please Select' %>
+  </div>
+
+  <div class="field">
+    <strong>Balance:</strong>&nbsp;$0
   </div>
 
   <div class="field">

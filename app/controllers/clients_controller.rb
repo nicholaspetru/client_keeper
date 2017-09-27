@@ -13,6 +13,7 @@ class ClientsController < ApplicationController
     @local_user = get_local_user_by_token(@client.user_token)
     @user_cards = retrieve_user_card_data(@client.user_token)
     @user_data = retrieve_user_data(@client.user_token)
+    @status_options = ['ACTIVE', 'SUSPENDED', 'TERMINATED']
   end
 
   def new
@@ -35,6 +36,15 @@ class ClientsController < ApplicationController
         format.json { render json: @client.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def activate
+    @body = {
+      :card_token => params['card_token'],
+      :state => params['status'],
+      :channel => 'API'
+    }.to_json
+    @request = Client.post_card_transitions(@body)
   end
 
   def destroy

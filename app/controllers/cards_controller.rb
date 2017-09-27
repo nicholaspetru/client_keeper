@@ -45,18 +45,19 @@ class CardsController < ApplicationController
       }
     }.to_json
 
-    @request = Card.post_request(@@base_url, @body)
+    @response = Card.post_request(@@base_url, @body)
 
     respond_to do |format|
-      if @request['error_code'].nil?
+      if @response['error_code'].nil?
         @success_redirect = "/clients/#{params[:client_id]}/cards"
-        flash[:success] = 'Card was successfully created.'
+        flash[:success] = ['Card was successfully created.']
+        find_funding_source(@client.user_token, @response)
         format.html { redirect_to @success_redirect }
         format.json { render :show, status: :created, location: @success_redirect }
       else
-        flash[:danger] = @request['error_message']
+        flash[:danger] = @response['error_message']
         format.html { render :new }
-        format.json { render json: @request.error_code, status: :unprocessable_entity }
+        format.json { render json: @response.error_code, status: :unprocessable_entity }
       end
     end
   end
@@ -85,12 +86,23 @@ class CardsController < ApplicationController
     User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
   end
 
+  def find_funding_source(user_token, card_response)
+    fund = Card.get_funding_source(user_token, card_response)
+    if fund[:funding_source]['error_code'].nil?
+      message = fund[:existing] ? 'Existing funding source identified' : 'New funding source successfully established'
+      flash[:success] << message
+    else
+      flash[:danger] = fund[:funding_source]['error_message']
+    end
+    fund[:funding_source]
+  end
+
   private
     def set_card
       @card = Card.find(params[:client_id])
     end
 
     def card_params
-      params.require(:card).permit(:token, :user_token, :card_product_token)
+      params.require(:card).permit(:token, :user_token, :card_product_token, :status)
     end
 end

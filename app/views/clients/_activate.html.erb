@@ -1,0 +1,12 @@
+<%= form_with do |form| %>
+  <div class="field card-activation-form">
+    <%= form.label :change_status %>:
+    <br />
+    <%= form.select :status, @status_options, prompt: 'Please Select' %>
+    <div class="actions status-change-button">
+      <%= hidden_field_tag(:card_token, card['token']) %>
+      <%= form.submit 'Go!' %>
+    </div>
+  </div>
+
+<% end %>

@@ -50,11 +50,15 @@
               <li>State: <%= card['state'] %></li>
               <li>Fulfillment status: <%= card['fulfillment_status'] %></li>
               <li>Barcode: <%= card['barcode'] %></li>
+              <li>
+                <%= render 'activate', card: card %>
+              </li>
             </ul>
           </li>
         <% end %>
       <% end %>
     </ul>
+    <em class="small-font"><strong>Note: </strong>A user can be associated with only one ACTIVE card at a time. Activating a card automatically terminates any currently ACTIVE card.</em>
   </div>
 
 <%= link_to 'Edit client', edit_user_path(@local_user) %>

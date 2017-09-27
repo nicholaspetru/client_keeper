@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   get '/transactions/begin' => 'transactions#begin'
   post '/transactions/begin' => 'transactions#begin_with_client'
+  post '/clients/:client_id' => 'clients#activate'
 
   root to: 'stores#index'
   get    '/signup',  to: 'stores#new'
