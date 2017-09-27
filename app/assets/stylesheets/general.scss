@@ -43,6 +43,11 @@ input.form-control {
   max-width: 300px;
 }
 
+input.form-control.small-form {
+  max-width: 100px;
+  height: 25px;
+}
+
 .small-font, .small-font strong {
   font-size: 10px;
 }

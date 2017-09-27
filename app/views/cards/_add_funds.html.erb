@@ -1,0 +1,11 @@
+<%= form_with do |form| %>
+  <div class="field add-funds-form">
+    <br />
+    <%= form.text_field :amount, class: 'small-form form-control' %>
+    <div class="actions add-fund-button">
+      <%= hidden_field_tag(:card, card) %>
+      <%= form.submit 'Go!' %>
+    </div>
+  </div>
+
+<% end %>

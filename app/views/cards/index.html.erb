@@ -10,18 +10,22 @@
         <th>Expires</th>
         <th>State</th>
         <th>Fulfillment status</th>
-        <th>Barcode</th>
+        <th>Balance</th>
+        <th>Add funds</th>
       </tr>
     </thead>
 
     <tbody>
       <% @cards['data'].each do |card| %>
         <tr>
-          <td><%= CardProduct.where(token: card['card_product_token']).to_a[0]['name'] %></td>
+          <td>TEMP CP</td>
           <td><%= card['expiration'] %></td>
           <td><%= card['state'] %></td>
           <td><%= card['fulfillment_status'] %></td>
-          <td><%= card['barcode'] %></td>
+          <td><%= Card.get_balance(card['token'], current_store.token)['available_balance'] %></td>
+          <td>
+            <%= render 'add_funds', card: card %>
+          </td>
         </tr>
       <% end %>
     </tbody>

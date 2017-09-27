@@ -25,6 +25,28 @@ class Card < ApplicationRecord
     Card.get_request("#{@@base_url}cards/#{card_token}/showpan?show_cvv_number=true")
   end
 
+  def self.get_balance(card_token, store_token)
+    @store = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/stores/#{store_token}")
+    @body = {
+      :card_token => card_token,
+      :mid => @store['mid'],
+      :account_type => 'credit'
+    }.to_json
+    response = Card.post_request("#{@@base_url}simulate/financial/balanceinquiry", @body)
+    puts response['transaction']['gpa']
+    response['transaction']['gpa']
+  end
+
+  def self.add_funds(user_token, amount, card_data)
+    funding_source_token = Card.get_funding_source(user_token, card_data)
+    @body = {
+      :user_token => user_token,
+      :amount => amount,
+      :currency_code => 'USD',
+    }.to_json
+    Card.post_request("#{@@base_url}gpaorders", @body)
+  end
+
   def self.get_funding_source(user_token, card_response)
     funding_source = Card.get_request("#{@@base_url}fundingsources/user/#{user_token}")
     if funding_source["error_code"] == "404150"
