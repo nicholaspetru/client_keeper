@@ -1,9 +1,7 @@
 <% provide(:title, "Login") %>
-<h3>Login</h3>
-
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <!--  #TODO: implement with form_with-->
+    <h1>Login</h1>
     <%= form_for(:session, url: login_path) do |f| %>
 
       <%= f.label :username %>
