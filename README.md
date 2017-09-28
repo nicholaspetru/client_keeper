@@ -1,6 +1,6 @@
-## README
+# README
 
-# To use Client Keeper:
+## To use Client Keeper:
 
 * Clone or download the repository
 
@@ -11,7 +11,7 @@
 * Finally to start up the app run `rails server`
 
 
-# A couple notes
+## A couple notes
 This is still a work in progress so...
 
 * Please note that there are some areas that would create serious security risks in a real life scenario.
