@@ -4,7 +4,10 @@
 
 .basic-client-info, .client-cards {
   display: table-cell;
-  width: 50vw;
+}
+
+.basic-client-info {
+  width: 25vw;
 }
 
 .card-activation-form {

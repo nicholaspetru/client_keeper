@@ -4,6 +4,9 @@
     Client: <%= @user_data['first_name'] %> <%= @user_data['last_name'] %>
   </h1>
 
+  <br />
+  <%= link_to 'Edit client', edit_user_path(@local_user) %>
+  <br />
   <%= link_to 'New transaction', new_client_transaction_path(@client) %>
   <br />
   <%= link_to 'Add card', new_client_card_path(@client) %>
@@ -31,13 +34,14 @@
     </p>
 
     <p>
-      <strong>Zip:</strong><%= @user_data['zip'] %>
+      <strong>Zip: </strong><%= @user_data['zip'] %>
     </p>
 
     <p>
       <strong>Active: </strong><%= @user_data['active'] %>
     </p>
   </div>
+
   <div class="client-cards">
     <h3>Cards:</h3>
     <ul>
@@ -64,9 +68,10 @@
         <% end %>
       <% end %>
     </ul>
-    <em class="small-font"><strong>Note: </strong>A user can be associated with only one ACTIVE card at a time. Activating a card automatically terminates any currently ACTIVE card.</em>
+    <em class="card-activate-note small-font"><strong>Note: </strong>A user can be associated with only one ACTIVE card at a time. Activating a card automatically terminates any currently ACTIVE card.</em>
   </div>
 
-<%= link_to 'Edit client', edit_user_path(@local_user) %>
-<br />
-<%= link_to 'All clients', clients_path %>
+  <div class="transaction-history">
+    <h3>Transactions:</h3>
+    <%= render 'transactions', transaction_list: @transactions['data'] %>
+  </div>

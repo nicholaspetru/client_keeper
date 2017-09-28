@@ -2,6 +2,8 @@ class ClientsController < ApplicationController
   before_action :require_login
   before_action :set_client, only: [:edit, :update, :destroy]
 
+  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/"
+
   def index
     @local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token, :id)
     @users = @local_clients.map { |lc| retrieve_user_data(lc[0]) }
@@ -14,6 +16,9 @@ class ClientsController < ApplicationController
     @user_cards = retrieve_user_card_data(@client.user_token)
     @user_data = retrieve_user_data(@client.user_token)
     @status_options = ['ACTIVE', 'SUSPENDED', 'TERMINATED']
+    funding_source = Card.get_funding_source(@client.user_token)
+    funding_source = funding_source['data'].first if funding_source['count'] > 0
+    @transactions = Transaction.get_request("#{@@base_url}transactions/fundingsource/#{funding_source['token']}")
   end
 
   def new
@@ -66,11 +71,11 @@ class ClientsController < ApplicationController
   end
 
   def retrieve_user_card_data(user_token)
-    Card.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/user/#{user_token}").parsed_response
+    Card.get_request("#{@@base_url}cards/user/#{user_token}").parsed_response
   end
 
   def retrieve_user_data(user_token)
-    User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
+    User.get_request("#{@@base_url}users/#{user_token}").parsed_response
   end
 
   private

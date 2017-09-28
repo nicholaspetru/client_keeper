@@ -1,0 +1,27 @@
+<table>
+  <thead>
+    <tr>
+      <th>State</th>
+      <th>Card Product</th>
+      <th>Balance</th>
+      <th>Requested</th>
+      <th>Date</th>
+      <th>Store</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% transaction_list.each do |transaction| %>
+      <tr>
+        <td><%= transaction['state'] %></td>
+        <td><%= Card.get_card_product_by_token(transaction['card_token']) %></td>
+        <td><%= transaction['gpa']['available_balance'] %></td>
+        <td><%= transaction['request_amount'] %></td>
+        <td><%= transaction['created_time'] %></td>
+        <td><%= transaction['store']['name'] %></td>
+        <td><%= transaction['type'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

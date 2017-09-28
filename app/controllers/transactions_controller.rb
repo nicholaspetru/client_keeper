@@ -49,7 +49,6 @@ class TransactionsController < ApplicationController
 
     @response = Transaction.post_request(@@simulate_base_url, @body)
     @transaction = @response['transaction']
-    puts "TRANSACTION RESPONSE: #{@response}"
 
     if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
       flash[:danger] = @response['error_message']

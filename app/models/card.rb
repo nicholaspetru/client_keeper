@@ -21,6 +21,12 @@ class Card < ApplicationRecord
     ApiModule.api_put_request(request_url, body)
   end
 
+  def self.get_card_product_by_token(card_token)
+    card = Card.get_request("#{@@base_url}cards/#{card_token}")
+    card_product = CardProduct.get_request("#{@@base_url}cardproducts/#{card['card_product_token']}")
+    card_product['name']
+  end
+
   def self.get_cvv(card_token)
     Card.get_request("#{@@base_url}cards/#{card_token}/showpan?show_cvv_number=true")
   end
@@ -63,6 +69,10 @@ class Card < ApplicationRecord
     }.to_json
 
     Card.post_request("#{@@base_url}/fundingsources/paymentcard", @body)
+  end
+
+  def self.get_funding_source(user_token)
+    Card.get_request("#{@@base_url}fundingsources/user/#{user_token}")
   end
 
   def self.get_funding_source_address(user_token)
