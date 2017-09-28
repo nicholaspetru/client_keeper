@@ -37,7 +37,7 @@ class Card < ApplicationRecord
   end
 
   def self.add_funds(user_token, amount, card_data)
-    funding_source_token = Card.get_funding_source(user_token, card_data)[:funding_source]
+    funding_source_token = Card.create_funding_source(user_token, card_data)
     funding_source_address = Card.get_funding_source_address(user_token)
     @body = {
       :user_token => user_token,
@@ -49,22 +49,7 @@ class Card < ApplicationRecord
     Card.post_request("#{@@base_url}gpaorders", @body)
   end
 
-  def self.get_funding_source(user_token, card_response)
-    funding_source = Card.get_request("#{@@base_url}fundingsources/user/#{user_token}")
-    if funding_source["error_code"] == "404150"
-      return {
-        funding_source: Card.establish_funding_source(user_token, card_response),
-        existing: false
-      }
-    else
-      return {
-        funding_source: funding_source['data'].first,
-        existing: true
-      }
-    end
-  end
-
-  def self.establish_funding_source(user_token, card_response)
+  def self.create_funding_source(user_token, card_response)
     card = Card.get_request("#{@@base_url}cards/user/#{user_token}")
     card = card['data'].first if card['count'] > 0
 

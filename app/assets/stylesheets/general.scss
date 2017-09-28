@@ -10,14 +10,14 @@ body div.container {
   padding: 10px 30px;
 }
 
-a:after {
+.cell-link a:after, a:after {
   content: " >>"
 }
 td a:after {
   content: none;
 }
 
-a {
+.cell-link a, a {
   text-decoration: none !important;
   &:after {
     -webkit-transition: margin-left .5s;
@@ -50,6 +50,12 @@ input.form-control {
 input.form-control.small-form {
   max-width: 100px;
   height: 25px;
+}
+
+.cell-link {
+  a {
+    font-weight: bold;
+  }
 }
 
 .small-font, .small-font strong {

@@ -4,7 +4,7 @@
     <%= form.select :card_token, @card_list, prompt: 'Please Select' %>
   </div>
 
-  <div class="field">
+  <div class="field transaction-amount-field">
     <%= form.label :amount, class: 'required' %>
     <%= form.text_field :amount, id: :transaction_amount, class: 'form-control', :required => true %>
   </div>

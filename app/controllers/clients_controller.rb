@@ -14,7 +14,6 @@ class ClientsController < ApplicationController
     @user_cards = retrieve_user_card_data(@client.user_token)
     @user_data = retrieve_user_data(@client.user_token)
     @status_options = ['ACTIVE', 'SUSPENDED', 'TERMINATED']
-    @funding_source = Card.get_funding_source(@client.user_token, @user_cards.first)
   end
 
   def new

@@ -4,9 +4,11 @@
     Client: <%= @user_data['first_name'] %> <%= @user_data['last_name'] %>
   </h1>
 
-  <%= link_to 'Add card', "/clients/#{@client.id}/cards/new" %>
+  <%= link_to 'New transaction', new_client_transaction_path(@client) %>
   <br />
-  <%= link_to 'View cards', "/clients/#{@client.id}/cards" %>
+  <%= link_to 'Add card', new_client_card_path(@client) %>
+  <br />
+  <%= link_to 'View cards', client_cards_path(@client) %>
 
   <br />
 
@@ -41,7 +43,7 @@
     <ul>
       <% if @user_cards['count'] == 0 %>
         <li>No cards available</li>
-        <li>Note that all cardholder address info must be filled out to add a card</li>
+        <li><strong>Important:</strong> All cardholder address info must be filled out to add a card</li>
       <% else %>
         <% @user_cards['data'].each do |card| %>
           <li>
