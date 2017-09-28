@@ -1,24 +1,23 @@
-# README
+## README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# To use Client Keeper:
 
-Things you may want to cover:
+* Clone or download the repository
 
-* Ruby version
+* Run `bundle install`
 
-* System dependencies
+* Run some migrations to seed some minimal data (`rails db:migrate`)
 
-* Configuration
+* Finally to start up the app run `rails server`
 
-* Database creation
 
-* Database initialization
+# A couple notes
+This is still a work in progress so...
 
-* How to run the test suite
+* Please note that there are some areas that would create serious security risks in a real life scenario.
 
-* Services (job queues, cache servers, search engines, etc.)
+* Tests are primarily not yet set up
 
-* Deployment instructions
+* There is a lot of excess in the schema/db (and the app in general)
 
-* ...
+* And most of all, please feel free to offer any suggestions or point out any issues!
