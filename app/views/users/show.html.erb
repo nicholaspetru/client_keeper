@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
   <h1>
-    Client: <%= @user['first_name'] %> <%= @user['last_name'] %>
+    User: <%= @user['first_name'] %> <%= @user['last_name'] %>
   </h1>
 
   <br />
@@ -33,6 +33,6 @@
     </p>
   </div>
 
-<%= link_to 'Edit client', edit_user_path(@local_user) %>
+<%= link_to 'Edit user', edit_user_path(@local_user) %>
 <br />
 <%= link_to 'All clients', clients_path %>

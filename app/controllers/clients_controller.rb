@@ -5,9 +5,8 @@ class ClientsController < ApplicationController
   @@base_url = "https://shared-sandbox-api.marqeta.com/v3/"
 
   def index
-    @local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token, :id)
-    @users = @local_clients.map { |lc| retrieve_user_data(lc[0]) }
-    @local_users = @local_clients.map { |lc| get_local_user_by_token(lc[0]) }
+    @clients = Client.where(store_token: current_store.token)
+    @users = @clients.map { |client| retrieve_user_data(client.user_token) unless client.user_token.empty? }
   end
 
   def show
@@ -26,19 +25,24 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = Client.create(
-      user_token: params['client']['token'],
-      store_token: current_store.token
-    ) unless params['client'].nil?
+    if params['client'].nil? || params['client']['token'].empty?
+      flash[:danger] = "Please select a client and try again"
+      redirect_to new_client_path
+    else
+      @client = Client.create(
+        user_token: params['client']['token'],
+        store_token: current_store.token
+      )
 
-    respond_to do |format|
-      if @client.save
-        flash[:success] = 'Client was successfully created.'
-        format.html { redirect_to @client }
-        format.json { render :show, status: :created, location: @client }
-      else
-        format.html { render :new }
-        format.json { render json: @client.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @client.save
+          flash[:success] = 'Client was successfully created.'
+          format.html { redirect_to @client }
+          format.json { render :show, status: :created, location: @client }
+        else
+          format.html { render :new }
+          format.json { render json: @client.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -80,6 +84,7 @@ class ClientsController < ApplicationController
 
   private
     helper_method :assemble_full_name
+    helper_method :get_local_user_by_token
     def require_login
       unless logged_in?
         flash[:danger] = 'You must login to access clients.'

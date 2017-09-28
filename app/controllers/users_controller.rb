@@ -33,7 +33,7 @@ class UsersController < ApplicationController
       last_name: @response['last_name'],
       email: @response['email'],
       token: @response['token']
-    ) if !@response['token'].nil?
+    ) unless @response['token'].nil?
 
     unless @response['error_code'].nil?
       flash[:danger] = @response['error_message']
@@ -73,15 +73,12 @@ class UsersController < ApplicationController
       last_name: @response['last_name'],
       email: @response['email'],
       token: @response['token']
-    }) if !@response['token'].nil?
-
-    @client = get_client_by_token(@response['token'])
+    }) unless @response['token'].nil?
 
     respond_to do |format|
       if @response['error_code'].nil?
-        @success_redirect = "/clients/#{@client.id}"
-        flash[:success] = "New user successfully created!"
-        format.html { redirect_to @success_redirect }
+        flash[:success] = "User successfully updated!"
+        format.html { redirect_to user_path(@user) }
         format.json { render :show, status: :created, location: @user }
       else
         flash[:danger] = @response['error_message']
@@ -100,7 +97,7 @@ class UsersController < ApplicationController
   end
 
   def get_client_by_token(user_token)
-    Client.find_by(user_token: @local_user.token, store_token: current_store.token)
+    Client.where(user_token: user_token, store_token: current_store.token)
   end
 
   def retrieve_user_data(user_token)
