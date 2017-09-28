@@ -13,18 +13,21 @@ class TransactionsController < ApplicationController
   end
 
   def begin
-    @transaction = Transaction.new
     @local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token)
     @clients = @local_clients.map { |lc| [get_full_name(lc), lc] }
   end
 
   def begin_with_client
-    @client = Client.where(user_token: params[:user_token], store_token: current_store.token).first
-    redirect_to "/clients/#{@client.id}/transactions/new"
+    if params[:user_token].empty?
+      flash[:danger] = "Please select a client and try again"
+      redirect_to '/transactions/begin'
+    else
+      @client = Client.where(user_token: params[:user_token], store_token: current_store.token).first
+      redirect_to "/clients/#{@client.id}/transactions/new"
+    end
   end
 
   def new
-    @transaction = Transaction.new
     @client = Client.find(params[:client_id])
     @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
     @cards = Card.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/user/#{@client.user_token}").parsed_response
@@ -39,24 +42,29 @@ class TransactionsController < ApplicationController
 
   def create
     @client = Client.find(params[:client_id])
-    @store = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/stores/#{current_store.token}")
-
-    @body = {
-      :amount => params['amount'],
-      :card_token => params['card_token'],
-      :mid => @store['mid']
-    }.to_json
-
-    @response = Transaction.post_request(@@simulate_base_url, @body)
-    @transaction = @response['transaction']
-
-    if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
-      flash[:danger] = @response['error_message']
-      flash[:danger] = "#{@transaction['state']}: #{@transaction['response']['memo']}"
+    if params['card_token'].empty?
+      flash[:danger] = "Please select a card and try again"
       redirect_to new_client_transaction_path(@client)
     else
-      flash[:success] = "#{@transaction['state']}: New transaction successfully created!"
-      redirect_to client_path(@client)
+      @store = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/stores/#{current_store.token}")
+
+      @body = {
+        :amount => params['amount'],
+        :card_token => params['card_token'],
+        :mid => @store['mid']
+      }.to_json
+
+      @response = Transaction.post_request(@@simulate_base_url, @body)
+      @transaction = @response['transaction']
+
+      if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
+        flash[:danger] = @response['error_message']
+        flash[:danger] = "#{@transaction['state']}: #{@transaction['response']['memo']}"
+        redirect_to new_client_transaction_path(@client)
+      else
+        flash[:success] = "#{@transaction['state']}: New transaction successfully created!"
+        redirect_to client_path(@client)
+      end
     end
   end
 
