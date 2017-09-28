@@ -2,8 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.add-funds-form {
+div.field.add-funds-form {
+  height: 25px;
+  margin-bottom: 0;
+  input {
+    max-width: 100px;
+  }
   input, .add-fund-button {
     display: inline-block;
+    margin-bottom: 0;
   }
 }

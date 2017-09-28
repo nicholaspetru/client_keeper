@@ -50,7 +50,7 @@ class CardsController < ApplicationController
 
     respond_to do |format|
       if @response['error_code'].nil?
-        @success_redirect = "/clients/#{params[:client_id]}/cards"
+        @success_redirect = "/clients/#{params[:client_id]}"
         flash[:success] = 'Card was successfully created. '
         find_funding_source(@client.user_token, @response)
         format.html { redirect_to @success_redirect }
@@ -64,10 +64,13 @@ class CardsController < ApplicationController
   end
 
   def add_funds
-    @client = Client.params[:client_id]
+    @client = Client.find(params[:client_id])
     @card_data = retrieve_card_data(params['card_token'])
     @response = Card.add_funds(@client.user_token, params['amount'], params['card'])
-    puts "ADD FUND RESPONSE: #{@response}"
+
+    unless @response['error_code'].nil?
+      flash[:danger] = @response['error_message']
+    end
     redirect_to client_cards_path(@client)
   end
 

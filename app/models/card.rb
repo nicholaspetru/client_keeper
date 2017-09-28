@@ -37,11 +37,14 @@ class Card < ApplicationRecord
   end
 
   def self.add_funds(user_token, amount, card_data)
-    funding_source_token = Card.get_funding_source(user_token, card_data)
+    funding_source_token = Card.get_funding_source(user_token, card_data)[:funding_source]
+    funding_source_address = Card.get_funding_source_address(user_token)
     @body = {
       :user_token => user_token,
       :amount => amount,
       :currency_code => 'USD',
+      :funding_source_token => funding_source_token['token'],
+      :funding_source_address_token => funding_source_address['token']
     }.to_json
     Card.post_request("#{@@base_url}gpaorders", @body)
   end
@@ -75,5 +78,29 @@ class Card < ApplicationRecord
     }.to_json
 
     Card.post_request("#{@@base_url}/fundingsources/paymentcard", @body)
+  end
+
+  def self.get_funding_source_address(user_token)
+      funding_adddress_response = Card.get_request("#{@@base_url}fundingsources/addresses/user/#{user_token}")
+      if funding_adddress_response['error_code'].nil?
+        funding_adddress_response
+      else
+        Card.set_funding_source_address(user_token)
+      end
+  end
+
+  def self.set_funding_source_address(user_token)
+    user = User.get_request("#{@@base_url}/users/#{user_token}")
+    @body = {
+      :user_token => user_token,
+      :first_name => user['first_name'],
+      :last_name => user['last_name'],
+      :address_1 => user['address1'],
+      :city => user['city'],
+      :state => user['state'],
+      :zip => user['zip'],
+      :country => "USA"
+    }.to_json
+    Card.post_request("#{@@base_url}fundingsources/addresses", @body)
   end
 end

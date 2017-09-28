@@ -1,10 +1,9 @@
-<%= form_with do |form| %>
+<%= form_tag(client_cards_add_funds_path, :method => 'post', :action => 'add_funds') do %>
   <div class="field add-funds-form">
-    <br />
-    <%= form.text_field :amount, class: 'small-form form-control' %>
+    <%= text_field_tag :amount %>
     <div class="actions add-fund-button">
       <%= hidden_field_tag(:card_token, card['token']) %>
-      <%= form.submit 'Go!' %>
+      <%= submit_tag 'Go!' %>
     </div>
   </div>
 

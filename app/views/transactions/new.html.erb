@@ -3,3 +3,5 @@
 <%= render 'form', client: @client, transaction: @transaction %>
 
 <%= link_to 'Begin new transaction', transactions_begin_path %>
+<br />
+<%= link_to 'View client', client_path(@client) %>

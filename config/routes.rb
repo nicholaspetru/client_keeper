@@ -5,16 +5,17 @@ Rails.application.routes.draw do
   resources :stores
   resources :card_products
   resources :clients do
-    resources :cards
+    resources :cards, except: :create
     resources :transactions
   end
 
-  get '/transactions/begin' => 'transactions#begin'
+  get  '/transactions/begin' => 'transactions#begin'
   post '/transactions/begin' => 'transactions#begin_with_client'
+  post '/clients/:client_id/transactions/new' => 'transactions#create'
   post '/clients/:client_id' => 'clients#activate'
   post '/clients/:client_id/cards/new' => 'cards#create'
-  post '/clients/:client_id/cards' => 'cards#add_funds'
-  
+  post '/clients/:client_id/cards' => 'cards#add_funds', as: 'client_cards_add_funds'
+
   root to: 'clients#index'
   get    '/signup',  to: 'stores#new'
   get    '/login',   to: 'sessions#new'

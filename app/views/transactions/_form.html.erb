@@ -1,23 +1,7 @@
-<%= form_for([client, transaction]) do |form| %>
-  <% if transaction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
-
-      <ul>
-      <% transaction.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+<%= form_with do |form| %>
   <div class="field">
     <%= form.label :card, class: 'required' %>
     <%= form.select :card_token, @card_list, prompt: 'Please Select' %>
-  </div>
-
-  <div class="field">
-    <strong>Balance:</strong>&nbsp;$0
   </div>
 
   <div class="field">

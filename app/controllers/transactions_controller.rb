@@ -40,15 +40,16 @@ class TransactionsController < ApplicationController
   def create
     @client = Client.find(params[:client_id])
     @store = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/stores/#{current_store.token}")
+
     @body = {
-      :amount => params['transaction']['amount'],
-      :card_token => params['transaction']['card_token'],
+      :amount => params['amount'],
+      :card_token => params['card_token'],
       :mid => @store['mid']
     }.to_json
 
     @response = Transaction.post_request(@@simulate_base_url, @body)
     @transaction = @response['transaction']
-    puts "TRANSACTION RESPONSE: #{@transaction}"
+    puts "TRANSACTION RESPONSE: #{@response}"
 
     if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
       flash[:danger] = @response['error_message']
@@ -75,8 +76,9 @@ class TransactionsController < ApplicationController
   def prepare_cards_dropdown(cards)
     return [] if cards['count'] == 0
     cards['data'].map do |card|
+      card_balance = Card.get_balance(card['token'], current_store.token)
       cp_name = CardProduct.where(token: card['card_product_token']).to_a[0]['name']
-      ["#{cp_name} ending in #{card['last_four']} ", card['token']]
+      ["#{cp_name} ending in #{card['last_four']} with balance $#{card_balance['available_balance']}", card['token']]
     end
   end
 
