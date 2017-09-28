@@ -19,7 +19,7 @@
         <td><%= transaction['gpa']['available_balance'] %></td>
         <td><%= transaction['request_amount'] %></td>
         <td><%= transaction['created_time'] %></td>
-        <td><%= transaction['store']['name'] %></td>
+        <td><%= transaction['store'].nil? ? 'n/a' : transaction['store']['name'] %></td>
         <td><%= transaction['type'] %></td>
       </tr>
     <% end %>

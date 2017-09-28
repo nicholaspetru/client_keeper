@@ -29,7 +29,7 @@
           <td><%= user['state'] %></td>
           <td><%= user['zip'] %></td>
           <td class="cell-link"><%= link_to 'go!', new_client_transaction_path(Client.where(user_token: user['token']).first) %></td>
-          <td><%= link_to 'view', client_path(Client.where(user_token: user['token'])) %></td>
+          <td><%= link_to 'view', client_path(Client.where(user_token: user['token']).first) %></td>
           <td><%= link_to 'edit', edit_user_path(get_local_user_by_token(user['token'])) %></td>
           <td><%= link_to 'delete', Client.where(user_token: user['token']).first, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>

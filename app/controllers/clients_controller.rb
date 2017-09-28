@@ -15,9 +15,11 @@ class ClientsController < ApplicationController
     @user_cards = retrieve_user_card_data(@client.user_token)
     @user_data = retrieve_user_data(@client.user_token)
     @status_options = ['ACTIVE', 'SUSPENDED', 'TERMINATED']
-    funding_source = Card.get_funding_source(@client.user_token)
-    funding_source = funding_source['data'].first if funding_source['count'] > 0
-    @transactions = Transaction.get_request("#{@@base_url}transactions/fundingsource/#{funding_source['token']}")
+    if @user_cards['count'] > 0
+      funding_source = Card.get_funding_source(@client.user_token)
+      funding_source = funding_source['data'].first if funding_source['count'] > 0
+      @transactions = Transaction.get_request("#{@@base_url}transactions/fundingsource/#{funding_source['token']}")
+    end
   end
 
   def new

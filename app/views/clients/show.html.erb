@@ -71,7 +71,9 @@
     <em class="card-activate-note small-font"><strong>Note: </strong>A user can be associated with only one ACTIVE card at a time. Activating a card automatically terminates any currently ACTIVE card.</em>
   </div>
 
-  <div class="transaction-history">
-    <h3>Transactions:</h3>
-    <%= render 'transactions', transaction_list: @transactions['data'] %>
-  </div>
+  <% if @user_cards['count'] > 0 %>
+    <div class="transaction-history">
+      <h3>Transactions:</h3>
+      <%= render 'transactions', transaction_list: @transactions['data'] %>
+    </div>
+  <% end %>

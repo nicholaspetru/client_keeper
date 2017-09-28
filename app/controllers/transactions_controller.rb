@@ -55,10 +55,13 @@ class TransactionsController < ApplicationController
       }.to_json
 
       @response = Transaction.post_request(@@simulate_base_url, @body)
+      puts "RESPPP: #{@response}"
       @transaction = @response['transaction']
 
-      if !@response['error_code'].nil? || @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
+      if !@response['error_code'].nil?
         flash[:danger] = @response['error_message']
+        redirect_to new_client_transaction_path(@client)
+      elsif @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
         flash[:danger] = "#{@transaction['state']}: #{@transaction['response']['memo']}"
         redirect_to new_client_transaction_path(@client)
       else
