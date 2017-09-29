@@ -17,9 +17,10 @@ rails db:setup
 ```
 
 * You will need to setup your environment variables in order to use the Marqeta APIs:
-  * Create a file as `config/environment_variables.yml`.
+  * Create a file as `config/environment_variables.yml`
   * In this file, add the following variables: `APPLICATION_TOKEN`, `MASTER_TOKEN`, and `BASE_URL`.
   * Once you sign up or log in, you can find the the appropriate values for each at `https://www.marqeta.com/api-explorer`
+  * Lastly, consider adding this file to your `.gitignore`
 
 * Finally to start up the app run `rails server`
 
