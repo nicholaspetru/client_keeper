@@ -2,8 +2,6 @@ class ClientsController < ApplicationController
   before_action :require_login
   before_action :set_client, only: [:edit, :update, :destroy]
 
-  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/"
-
   def index
     @clients = Client.where(store_token: current_store.token)
     @users = @clients.map { |client| retrieve_user_data(client.user_token) unless client.user_token.empty? }
@@ -18,7 +16,7 @@ class ClientsController < ApplicationController
     if @user_cards['count'] > 0
       funding_source = Card.get_funding_source(@client.user_token)
       funding_source = funding_source['data'].first if funding_source['count'] > 0
-      @transactions = Transaction.get_request("#{@@base_url}transactions/fundingsource/#{funding_source['token']}")
+      @transactions = Transaction.get_request("transactions/fundingsource/#{funding_source['token']}")
     end
   end
 
@@ -77,11 +75,11 @@ class ClientsController < ApplicationController
   end
 
   def retrieve_user_card_data(user_token)
-    Card.get_request("#{@@base_url}cards/user/#{user_token}").parsed_response
+    Card.get_request("cards/user/#{user_token}").parsed_response
   end
 
   def retrieve_user_data(user_token)
-    User.get_request("#{@@base_url}users/#{user_token}").parsed_response
+    User.get_request("users/#{user_token}").parsed_response
   end
 
   private

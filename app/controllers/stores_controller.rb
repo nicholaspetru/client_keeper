@@ -1,7 +1,6 @@
 class StoresController < ApplicationController
   before_action :set_store, only: [:show, :edit, :update, :destroy]
 
-  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/stores/"
   @@merchant_start_count = 1
 
   def index
@@ -11,7 +10,7 @@ class StoresController < ApplicationController
   def show
     @page_store = Store.find(params[:id])
     if logged_in?
-      @store = Store.get_request(@@base_url + current_store.token)
+      @store = Store.get_request("stores/" + current_store.token)
     end
   end
 
@@ -35,10 +34,10 @@ class StoresController < ApplicationController
       :merchant_token => get_merchant_token
     }.to_json
 
-    @response = Store.post_request(@@base_url, @body)
+    @response = Store.post_request("stores/", @body)
     while @response['error_code'] == "400101"
       @body['mid'] = rand((10 ** 15) - 1)
-      @response = Store.post_request(@@base_url, @body)
+      @response = Store.post_request("stores/", @body)
     end
 
     @store = Store.create(
@@ -62,7 +61,7 @@ class StoresController < ApplicationController
   end
 
   def get_merchant_token
-    response = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/merchants?count=1&start_index=#{@@merchant_start_count}")
+    response = Store.get_request("merchants?count=1&start_index=#{@@merchant_start_count}")
     @@merchant_start_count += 1 if response['data']
     if response['data']
       response['data'][0]['token']
@@ -72,6 +71,7 @@ class StoresController < ApplicationController
   end
 
   def update
+    #TODO: updating store does yet not PUT to APIs
     respond_to do |format|
       # put request instead
       if @store.update(store_params)

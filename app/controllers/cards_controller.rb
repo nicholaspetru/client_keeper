@@ -1,23 +1,22 @@
 class CardsController < ApplicationController
   before_action :set_card, only: [:show, :edit, :update, :destroy]
 
-  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/cards/"
 
   def index
     @client = Client.find(params[:client_id])
     @user = retrieve_user_data(@client.user_token)
-    @cards = Card.get_request("#{@@base_url}user/#{@client.user_token}")
+    @cards = Card.get_request("cards/user/#{@client.user_token}")
   end
 
   def show
     @client = Client.find(params[:id])
-    @card = Card.get_request(@@base_url + @user_token)
+    @card = Card.get_request("cards/" + @user_token)
   end
 
   def new
     @card = Card.new
     @client = Client.find(params[:client_id])
-    @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
+    @user = User.get_request("users/#{@client.user_token}").parsed_response
     @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
     @success_redirect = "/clients/#{params[:client_id]}/cards"
   end
@@ -28,7 +27,7 @@ class CardsController < ApplicationController
   def create
     @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
     @client = Client.find(params[:client_id])
-    @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
+    @user = User.get_request("users/#{@client.user_token}").parsed_response
     @body = {
       :user_token => @client.user_token,
       :card_product_token => params['card_product_token'],
@@ -46,7 +45,7 @@ class CardsController < ApplicationController
       }
     }.to_json
 
-    @response = Card.post_request(@@base_url, @body)
+    @response = Card.post_request("cards/", @body)
 
     respond_to do |format|
       if @response['error_code'].nil?
@@ -95,11 +94,11 @@ class CardsController < ApplicationController
   end
 
   def retrieve_user_data(user_token)
-    User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
+    User.get_request("users/#{user_token}").parsed_response
   end
 
   def retrieve_card_data(card_token)
-    Card.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/#{card_token}").parsed_response
+    Card.get_request("cards/#{card_token}").parsed_response
   end
 
   def find_funding_source(user_token, card_response)

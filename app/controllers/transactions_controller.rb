@@ -2,8 +2,6 @@ class TransactionsController < ApplicationController
   before_action :require_login
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
-  @@simulate_base_url = "https://shared-sandbox-api.marqeta.com/v3/simulate/financial"
-
   def index
     @transactions = Transaction.all
   end
@@ -29,13 +27,13 @@ class TransactionsController < ApplicationController
 
   def new
     @client = Client.find(params[:client_id])
-    @user = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{@client.user_token}").parsed_response
-    @cards = Card.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/user/#{@client.user_token}").parsed_response
+    @user = User.get_request("users/#{@client.user_token}").parsed_response
+    @cards = Card.get_request("cards/user/#{@client.user_token}").parsed_response
     @card_list = prepare_cards_dropdown(@cards)
   end
 
   def get_full_name(user_token)
-    response = User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}")
+    response = User.get_request("users/#{user_token}")
     user_data = response.parsed_response
     return "#{user_data['first_name']} #{user_data['last_name']}"
   end
@@ -46,7 +44,7 @@ class TransactionsController < ApplicationController
       flash[:danger] = "Please select a card and try again"
       redirect_to new_client_transaction_path(@client)
     else
-      @store = Store.get_request("https://shared-sandbox-api.marqeta.com/v3/stores/#{current_store.token}")
+      @store = Store.get_request("stores/#{current_store.token}")
 
       @body = {
         :amount => params['amount'],
@@ -54,7 +52,7 @@ class TransactionsController < ApplicationController
         :mid => @store['mid']
       }.to_json
 
-      @response = Transaction.post_request(@@simulate_base_url, @body)
+      @response = Transaction.post_request("simulate/financial", @body)
       @transaction = @response['transaction']
 
       if !@response['error_code'].nil?
@@ -92,7 +90,7 @@ class TransactionsController < ApplicationController
   end
 
   def retrieve_cards_by_user_token(user_token)
-    User.get_request("https://shared-sandbox-api.marqeta.com/v3/cards/user/#{user_token}").parsed_response
+    User.get_request("cards/user/#{user_token}").parsed_response
   end
 
   private

@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-card_products_list = CardProduct.get_request("https://shared-sandbox-api.marqeta.com/v3/cardproducts?count=15
+card_products_list = CardProduct.get_request("cardproducts?count=15
 ")
 
 card_products_list['data'].each do |cp|

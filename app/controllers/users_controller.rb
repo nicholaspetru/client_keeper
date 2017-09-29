@@ -1,14 +1,12 @@
 class UsersController < ApplicationController
   before_action :set_local_user, only: [:show, :edit, :update, :destroy]
 
-  @@base_url = "https://shared-sandbox-api.marqeta.com/v3/users/"
-
   def index
     @users = User.all
   end
 
   def show
-    @user = User.get_request(@@base_url + @local_user.token).parsed_response
+    @user = User.get_request("users/" + @local_user.token).parsed_response
   end
 
   def new
@@ -26,7 +24,7 @@ class UsersController < ApplicationController
       :zip => params['user']['zip']
     }.to_json
 
-    @response = User.post_request(@@base_url, @body)
+    @response = User.post_request("users/", @body)
 
     @user = User.create(
       first_name: @response['first_name'],
@@ -66,7 +64,7 @@ class UsersController < ApplicationController
       :zip => params['user']['zip']
     }.to_json
 
-    @response = User.put_request("#{@@base_url}/#{@local_user.token}", @body)
+    @response = User.put_request("users/#{@local_user.token}", @body)
 
     @user = User.update(params[:id], {
       first_name: @response['first_name'],
@@ -101,7 +99,7 @@ class UsersController < ApplicationController
   end
 
   def retrieve_user_data(user_token)
-    User.get_request("https://shared-sandbox-api.marqeta.com/v3/users/#{user_token}").parsed_response
+    User.get_request("users/#{user_token}").parsed_response
   end
 
   private

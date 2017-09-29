@@ -4,7 +4,7 @@ class CardProduct < ApplicationRecord
 
   has_many :card
 
-  def self.get_request(request_url)
-    ApiModule.api_get_request(request_url)
+  def self.get_request(endpoint)
+    ApiModule.api_get_request(endpoint)
   end
 end

@@ -14,15 +14,15 @@ class Store < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
   has_secure_password
 
-  def self.get_request(request_url)
-    ApiModule.api_get_request(request_url)
+  def self.get_request(endpoint)
+    ApiModule.api_get_request(endpoint)
   end
 
-  def self.post_request(request_url, body=false)
-    ApiModule.api_post_request(request_url, body)
+  def self.post_request(endpoint, body=false)
+    ApiModule.api_post_request(endpoint, body)
   end
 
-  def self.put_request(request_url, body=false)
-    ApiModule.api_put_request(request_url, body)
+  def self.put_request(endpoint, body=false)
+    ApiModule.api_put_request(endpoint, body)
   end
 end
