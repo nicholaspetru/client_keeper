@@ -1,5 +1,5 @@
 require 'api_module'
-class Card < ApplicationRecord
+class Card < ApiBase
   include ApiModule
 
   belongs_to :card_product
@@ -7,18 +7,6 @@ class Card < ApplicationRecord
   belongs_to :client
 
   @account_options = ['4112344112344113', '4110144110144115', '5111005111051128', '5112345112345114', '371144371144376', '341134113411347', '6011016011016011', '6559906559906557', '3566003566003566', '3528000000000007']
-
-  def self.get_request(endpoint)
-    ApiModule.api_get_request(endpoint)
-  end
-
-  def self.post_request(endpoint, body=false)
-    ApiModule.api_post_request(endpoint, body)
-  end
-
-  def self.put_request(endpoint, body=false)
-    ApiModule.api_put_request(endpoint, body)
-  end
 
   def self.get_card_product_by_token(card_token)
     card = Card.get_request("cards/#{card_token}")

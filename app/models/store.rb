@@ -1,5 +1,5 @@
 require 'api_module'
-class Store < ApplicationRecord
+class Store < ApiBase
   include ApiModule
 
   # TODO: adjust schema to only contain necessary info (all models)
@@ -13,16 +13,4 @@ class Store < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: true }
   validates :name, presence: true, length: { maximum: 50 }
   has_secure_password
-
-  def self.get_request(endpoint)
-    ApiModule.api_get_request(endpoint)
-  end
-
-  def self.post_request(endpoint, body=false)
-    ApiModule.api_post_request(endpoint, body)
-  end
-
-  def self.put_request(endpoint, body=false)
-    ApiModule.api_put_request(endpoint, body)
-  end
 end
