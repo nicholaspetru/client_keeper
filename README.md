@@ -6,7 +6,15 @@
 
 * Run `bundle install`
 
-* Run some migrations to seed some minimal data (`rails db:migrate`)
+*  Then set up the database and seed data with:
+```
+rails db:migrate
+rails db:seed
+```
+or
+```
+rails db:setup
+```
 
 * Finally to start up the app run `rails server`
 

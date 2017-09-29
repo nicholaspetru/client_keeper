@@ -55,7 +55,6 @@ class TransactionsController < ApplicationController
       }.to_json
 
       @response = Transaction.post_request(@@simulate_base_url, @body)
-      puts "RESPPP: #{@response}"
       @transaction = @response['transaction']
 
       if !@response['error_code'].nil?
