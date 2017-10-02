@@ -103,7 +103,7 @@ class CardsController < ApplicationController
   def find_funding_source(user_token, card_response)
     funding_source = Card.create_funding_source(user_token, card_response)
     if funding_source['error_code'].nil?
-      flash[:success] += 'New funding source successfully established.'
+      flash[:success] << 'New funding source successfully established.'
     else
       flash[:danger] = funding_source['error_message']
     end
