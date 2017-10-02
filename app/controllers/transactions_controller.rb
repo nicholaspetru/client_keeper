@@ -1,18 +1,9 @@
 class TransactionsController < ApplicationController
   before_action :require_login
-  before_action :set_transaction, only: [:show, :edit, :update, :destroy]
-
-  def index
-    @transactions = Transaction.all
-  end
-
-  def show
-    @transaction = Transaction.find(params[:id])
-  end
 
   def begin
-    @local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token)
-    @clients = @local_clients.map { |lc| [get_full_name(lc), lc] }
+    local_clients = Client.where(store_token: current_store.token).to_a.pluck(:user_token)
+    @clients = local_clients.map { |lc| [get_full_name(lc), lc] }
   end
 
   def begin_with_client
@@ -20,16 +11,16 @@ class TransactionsController < ApplicationController
       flash[:danger] = "Please select a client and try again"
       redirect_to '/transactions/begin'
     else
-      @client = Client.where(user_token: params[:user_token], store_token: current_store.token).first
-      redirect_to "/clients/#{@client.id}/transactions/new"
+      client = Client.where(user_token: params[:user_token], store_token: current_store.token).first
+      redirect_to "/clients/#{client.id}/transactions/new"
     end
   end
 
   def new
     @client = Client.find(params[:client_id])
     @user = User.get_request("users/#{@client.user_token}").parsed_response
-    @cards = Card.get_request("cards/user/#{@client.user_token}").parsed_response
-    @card_list = prepare_cards_dropdown(@cards)
+    cards = Card.get_request("cards/user/#{@client.user_token}").parsed_response
+    @card_list = prepare_cards_dropdown(cards)
   end
 
   def get_full_name(user_token)
@@ -39,31 +30,31 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    @client = Client.find(params[:client_id])
+    client = Client.find(params[:client_id])
     if params['card_token'].empty?
       flash[:danger] = "Please select a card and try again"
-      redirect_to new_client_transaction_path(@client)
+      redirect_to new_client_transaction_path(client)
     else
-      @store = Store.get_request("stores/#{current_store.token}")
+      store = Store.get_request("stores/#{current_store.token}")
 
-      @body = {
+      body = {
         :amount => params['amount'],
         :card_token => params['card_token'],
-        :mid => @store['mid']
+        :mid => store['mid']
       }.to_json
 
-      @response = Transaction.post_request("simulate/financial", @body)
-      @transaction = @response['transaction']
+      response = Transaction.post_request("simulate/financial", body)
+      transaction = response['transaction']
 
-      if !@response['error_code'].nil?
-        flash[:danger] = @response['error_message']
-        redirect_to new_client_transaction_path(@client)
-      elsif @transaction['state'] == 'DECLINED' || @transaction['state'] == 'ERROR'
-        flash[:danger] = "#{@transaction['state']}: #{@transaction['response']['memo']}"
-        redirect_to new_client_transaction_path(@client)
+      if !response['error_code'].nil?
+        flash[:danger] = response['error_message']
+        redirect_to new_client_transaction_path(client)
+      elsif transaction['state'] == 'DECLINED' || transaction['state'] == 'ERROR'
+        flash[:danger] = "#{transaction['state']}: #{transaction['response']['memo']}"
+        redirect_to new_client_transaction_path(client)
       else
-        flash[:success] = "#{@transaction['state']}: New transaction successfully created!"
-        redirect_to client_path(@client)
+        flash[:success] = "#{transaction['state']}: New transaction successfully created!"
+        redirect_to client_path(client)
       end
     end
   end
@@ -101,13 +92,5 @@ class TransactionsController < ApplicationController
         flash[:danger] = 'You must login to create a transaction.'
         redirect_to '/login'
       end
-    end
-
-    def set_transaction
-      @transaction = Transaction.find(params[:id])
-    end
-
-    def transaction_params
-      params.require(:transaction).permit(:user_token, :business_token, :card_token, :amount, :state, :type)
     end
 end
