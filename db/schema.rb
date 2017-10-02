@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170927162237) do
+ActiveRecord::Schema.define(version: 20171002200226) do
 
   create_table "card_products", force: :cascade do |t|
     t.string "name"
@@ -44,18 +44,6 @@ ActiveRecord::Schema.define(version: 20170927162237) do
     t.string "username"
     t.string "password"
     t.string "password_digest"
-  end
-
-  create_table "transactions", force: :cascade do |t|
-    t.string "token"
-    t.integer "amount"
-    t.string "state"
-    t.string "type"
-    t.string "user_token"
-    t.string "business_token"
-    t.string "card_token"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
