@@ -22,7 +22,7 @@ class StoresController < ApplicationController
   end
 
   def create
-    @body = {
+    body = {
       :name => params['store']['name'],
       :state => params['store']['state'],
       :city => params['store']['city'],
@@ -33,29 +33,34 @@ class StoresController < ApplicationController
       :active => params['store']['active'],
       :merchant_token => get_merchant_token
     }.to_json
+    response = Store.post_request("stores/", body)
 
-    @response = Store.post_request("stores/", @body)
-    while @response['error_code'] == "400101"
-      @body['mid'] = rand((10 ** 15) - 1)
-      @response = Store.post_request("stores/", @body)
+    while response['error_code'] == "400101"
+      body['mid'] = rand((10 ** 15) - 1)
+      response = Store.post_request("stores/", body)
     end
 
-    @store = Store.create(
-      name: @response['name'],
-      token: @response['token'],
-      username: params['store']['username'],
-      password: params['store']['password']
-    ) if !@response['token'].nil?
-
-    respond_to do |format|
-      if @store.save
-        login @store
-        flash[:success] = "New store successfully created!"
-        format.html { redirect_to @store }
-        format.json { render :show, status: :created, location: @store }
-      else
-        format.html { render :new }
-        format.json { render json: @store.errors, status: :unprocessable_entity }
+    unless response['error_code'].nil?
+      flash[:danger] = response['error_message']
+      redirect_to edit_store_path(local_store)
+    else
+      flash[:success] = "Store API successfully created."
+      @store = Store.create(
+        name: response['name'],
+        token: response['token'],
+        username: params['store']['username'],
+        password: params['store']['password']
+      )
+      respond_to do |format|
+        if @store.save
+          login @store
+          flash[:success] << "New local store successfully created!"
+          format.html { redirect_to @store }
+          format.json { render :show, status: :created, location: @store }
+        else
+          format.html { render :new }
+          format.json { render json: @store.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -71,16 +76,39 @@ class StoresController < ApplicationController
   end
 
   def update
-    #TODO: updating store does yet not PUT to APIs
-    respond_to do |format|
-      # put request instead
-      if @store.update(store_params)
-        flash[:success] = "Store successfully updated"
-        format.html { redirect_to @store }
-        format.json { render :show, status: :ok, location: @store }
-      else
-        format.html { render :edit }
-        format.json { render json: @store.errors, status: :unprocessable_entity }
+    local_store = Store.find(params[:id])
+    body = {
+      :name => params['store']['name'],
+      :state => params['store']['state'],
+      :city => params['store']['city'],
+      :address1 => params['store']['address1'],
+      :zip => params['store']['zip'],
+      :contact_email => params['store']['contact_email'],
+      :active => params['store']['active']
+    }.to_json
+    response = Store.put_request("stores/#{local_store.token}", body)
+
+    unless response['error_code'].nil?
+      flash[:danger] = response['error_message']
+      redirect_to edit_store_path(local_store)
+    else
+      flash[:success] = "Store API successfully udpated."
+      store = Store.update(
+        name: response['name'],
+        token: response['token'],
+        username: params['store']['username'],
+        password: params['store']['password']
+      )
+
+      respond_to do |format|
+        if store
+          flash[:success] << "Local store record successfully updated."
+          format.html { redirect_to local_store }
+          format.json { render :show, status: :ok, location: store }
+        else
+          format.html { render :edit }
+          format.json { render json: store.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

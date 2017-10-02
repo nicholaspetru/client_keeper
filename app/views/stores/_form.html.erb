@@ -12,8 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name, class: 'required' %>
-    <%= form.text_field :name, id: :store_name, class: 'form-control', :required => true %>
+    <%= form.label :name, class: editing ? '' : 'required' %>
+    <%= form.text_field :name, id: :store_name, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
@@ -32,31 +32,31 @@
   </div>
 
   <div class="field">
-    <%= form.label :address1, class: 'required' %>
-    <%= form.text_field :address1, id: :store_address1, class: 'form-control', :required => true %>
+    <%= form.label :address1, class: editing ? '' : 'required' %>
+    <%= form.text_field :address1, id: :store_address1, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
-    <%= form.label :city, class: 'required' %>
-    <%= form.text_field :city, id: :store_city, class: 'form-control', :required => true %>
+    <%= form.label :city, class: editing ? '' : 'required' %>
+    <%= form.text_field :city, id: :store_city, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
-    <%= form.label :state, class: 'required' %>
-    <%= form.text_field :state, id: :store_state, class: 'form-control', :required => true %>
+    <%= form.label :state, class: editing ? '' : 'required' %>
+    <%= form.text_field :state, id: :store_state, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
-    <%= form.label :zip, class: 'required' %>
-    <%= form.text_field :zip, id: :store_zip, class: 'form-control', :required => true %>
+    <%= form.label :zip, class: editing ? '' : 'required' %>
+    <%= form.text_field :zip, id: :store_zip, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
-    <%= form.label :active %>
-    <%= form.text_field :active, id: :store_active, class: 'form-control' %>
+    <%= form.label :active, editing ? '' : 'required'%>
+    <%= form.text_field :active, id: :store_active, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="actions">
-    <%= form.submit logged_in? ? 'Update store' : 'Create store' %>
+    <%= form.submit editing ? 'Update store' : 'Create store' %>
   </div>
 <% end %>

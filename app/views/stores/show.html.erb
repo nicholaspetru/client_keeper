@@ -19,7 +19,5 @@
   </p>
 <% end %>
 
-<% if current_store.token == @page_store['token'] %>
-  <%= link_to 'Edit', edit_store_path(@store) %> |
-<% end %>
+<%= link_to 'Edit', edit_store_path(@page_store) %> |
 <%= link_to 'Back', stores_path %>
