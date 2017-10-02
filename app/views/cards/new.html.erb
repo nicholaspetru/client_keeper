@@ -1,5 +1,5 @@
 <h3>New Card for <%= @user['first_name'] %> <%= @user['last_name'] %></h3>
 
-<%= render 'form', client: @client, card: @card %>
+<%= render 'form' %>
 
 <%= link_to 'View client', "/clients/#{@client.id}" %>
