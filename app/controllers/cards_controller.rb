@@ -18,7 +18,6 @@ class CardsController < ApplicationController
     @client = Client.find(params[:client_id])
     @user = User.get_request("users/#{@client.user_token}").parsed_response
     @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
-    @success_redirect = "/clients/#{params[:client_id]}/cards"
   end
 
   def edit
@@ -45,19 +44,19 @@ class CardsController < ApplicationController
       }
     }.to_json
 
-    @response = Card.post_request("cards/", @body)
+    response = Card.post_request("cards/", @body)
 
     respond_to do |format|
-      if @response['error_code'].nil?
-        @success_redirect = "/clients/#{params[:client_id]}"
+      if response['error_code'].nil?
+        success_redirect = "/clients/#{params[:client_id]}"
         flash[:success] = 'Card was successfully created. '
-        find_funding_source(@client.user_token, @response)
-        format.html { redirect_to @success_redirect }
-        format.json { render :show, status: :created, location: @success_redirect }
+        find_funding_source(@client.user_token, response)
+        format.html { redirect_to success_redirect }
+        format.json { render :show, status: :created, location: success_redirect }
       else
-        flash[:danger] = @response['error_message']
+        flash[:danger] = response['error_message']
         format.html { render :new }
-        format.json { render json: @response.error_code, status: :unprocessable_entity }
+        format.json { render json: response.error_code, status: :unprocessable_entity }
       end
     end
   end
