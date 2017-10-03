@@ -5,10 +5,3 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-
-card_products_list = CardProduct.get_request("cardproducts?count=15
-")
-
-card_products_list['data'].each do |cp|
-  CardProduct.create(name: cp['name'], token: cp['token'], active: cp['active'])
-end

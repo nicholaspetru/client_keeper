@@ -9,7 +9,7 @@ class CardsController < ApplicationController
   def new
     @client = Client.find(params[:client_id])
     @user = User.get_request("users/#{@client.user_token}").parsed_response
-    @card_products = CardProduct.all.map { |cp| [cp.name, cp.token] }
+    @card_products = create_card_product_list
   end
 
   def create
@@ -46,6 +46,13 @@ class CardsController < ApplicationController
         format.html { render :new }
         format.json { render json: response.error_code, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def create_card_product_list
+    card_products_list = CardProduct.get_request("cardproducts?count=25&start_index=25")
+    card_products_list['data'].map do |cp|
+      [cp['name'], cp['token']]
     end
   end
 

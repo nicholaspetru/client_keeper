@@ -75,7 +75,7 @@ class TransactionsController < ApplicationController
     return [] if cards['count'] == 0
     cards['data'].map do |card|
       card_balance = Card.get_balance(card['token'], current_store.token)
-      cp_name = CardProduct.where(token: card['card_product_token']).to_a[0]['name']
+      cp_name = CardProduct.get_request("cardproducts/#{card['card_product_token']}")['name']
       ["#{cp_name} ending in #{card['last_four']} with balance $#{card_balance['available_balance']}", card['token']]
     end
   end
