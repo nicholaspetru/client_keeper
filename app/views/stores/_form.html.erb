@@ -13,12 +13,12 @@
 
   <div class="field">
     <%= form.label :name, class: editing ? '' : 'required' %>
-    <%= form.text_field :name, id: :store_name, class: 'form-control', :required => !editing %>
+    <%= form.text_field :name, value: @store['name'], id: :store_name, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
     <%= form.label :contact_email %>
-    <%= form.email_field :contact_email, id: :store_contact_email, class: 'form-control' %>
+    <%= form.email_field :contact_email, value: @store['contact_email'], id: :store_contact_email, class: 'form-control' %>
   </div>
 
   <div class="field">
@@ -33,27 +33,27 @@
 
   <div class="field">
     <%= form.label :address1, class: editing ? '' : 'required' %>
-    <%= form.text_field :address1, id: :store_address1, class: 'form-control', :required => !editing %>
+    <%= form.text_field :address1, value: @store['address1'], id: :store_address1, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
     <%= form.label :city, class: editing ? '' : 'required' %>
-    <%= form.text_field :city, id: :store_city, class: 'form-control', :required => !editing %>
+    <%= form.text_field :city, value: @store['city'], id: :store_city, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
     <%= form.label :state, class: editing ? '' : 'required' %>
-    <%= form.text_field :state, id: :store_state, class: 'form-control', :required => !editing %>
+    <%= form.text_field :state, value: @store['state'], id: :store_state, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
     <%= form.label :zip, class: editing ? '' : 'required' %>
-    <%= form.text_field :zip, id: :store_zip, class: 'form-control', :required => !editing %>
+    <%= form.text_field :zip, value: @store['zip'], id: :store_zip, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="field">
     <%= form.label :active, editing ? '' : 'required'%>
-    <%= form.text_field :active, id: :store_active, class: 'form-control', :required => !editing %>
+    <%= form.text_field :active, value: @store['active'], id: :store_active, class: 'form-control', :required => !editing %>
   </div>
 
   <div class="actions">

@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-  before_action :set_store, only: [:show, :edit, :update, :destroy]
+  before_action :set_store, only: [:edit, :update, :destroy]
 
   @@merchant_start_count = 1
 
@@ -19,6 +19,8 @@ class StoresController < ApplicationController
   end
 
   def edit
+    @store = Store.get_request("stores/#{@local_store.token}").parsed_response
+    puts "GOTSTORE: #{@store}"
   end
 
   def create
@@ -42,26 +44,71 @@ class StoresController < ApplicationController
 
     unless response['error_code'].nil?
       flash[:danger] = response['error_message']
-      redirect_to edit_store_path(local_store)
+      redirect_to new_store_path
     else
-      flash[:success] = "Store API successfully created."
-      @store = Store.create(
+      flash[:success] = "New store successfully created (in API). "
+      store = Store.create(
         name: response['name'],
         token: response['token'],
         username: params['store']['username'],
         password: params['store']['password']
       )
       respond_to do |format|
-        if @store.save
-          login @store
-          flash[:success] << "New local store successfully created!"
-          format.html { redirect_to @store }
-          format.json { render :show, status: :created, location: @store }
+        if store.save
+          login store
+          flash[:success] << "New store successfully created (locally)!"
+          format.html { redirect_to store }
+          format.json { render :show, status: :created, location: store }
         else
           format.html { render :new }
-          format.json { render json: @store.errors, status: :unprocessable_entity }
+          format.json { render json: store.errors, status: :unprocessable_entity }
         end
       end
+    end
+  end
+
+  def update
+    body = {
+      :name => params['store']['name'],
+      :state => params['store']['state'],
+      :city => params['store']['city'],
+      :address1 => params['store']['address1'],
+      :zip => params['store']['zip'],
+      :contact_email => params['store']['contact_email'],
+      :active => params['store']['active']
+    }.to_json
+    response = Store.put_request("stores/#{@local_store.token}", body)
+
+    unless response['error_code'].nil?
+      flash[:danger] = response['error_message']
+      redirect_to edit_store_path(@local_store)
+    else
+      flash[:success] = "Store API successfully udpated."
+      store = Store.update(params[:id], {
+        name: response['name'],
+        token: response['token'],
+        username: params['store']['username'],
+        password: params['store']['password']
+      })
+
+      respond_to do |format|
+        if store
+          flash[:success] << "Local store record successfully updated."
+          format.html { redirect_to @local_store }
+          format.json { render :show, status: :ok, location: store }
+        else
+          format.html { render :edit }
+          format.json { render json: store.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+  end
+
+  def destroy
+    @local_store.destroy
+    respond_to do |format|
+      format.html { redirect_to stores_url, notice: 'Store was successfully destroyed.' }
+      format.json { head :no_content }
     end
   end
 
@@ -75,56 +122,10 @@ class StoresController < ApplicationController
     end
   end
 
-  def update
-    local_store = Store.find(params[:id])
-    body = {
-      :name => params['store']['name'],
-      :state => params['store']['state'],
-      :city => params['store']['city'],
-      :address1 => params['store']['address1'],
-      :zip => params['store']['zip'],
-      :contact_email => params['store']['contact_email'],
-      :active => params['store']['active']
-    }.to_json
-    response = Store.put_request("stores/#{local_store.token}", body)
-
-    unless response['error_code'].nil?
-      flash[:danger] = response['error_message']
-      redirect_to edit_store_path(local_store)
-    else
-      flash[:success] = "Store API successfully udpated."
-      store = Store.update(
-        name: response['name'],
-        token: response['token'],
-        username: params['store']['username'],
-        password: params['store']['password']
-      )
-
-      respond_to do |format|
-        if store
-          flash[:success] << "Local store record successfully updated."
-          format.html { redirect_to local_store }
-          format.json { render :show, status: :ok, location: store }
-        else
-          format.html { render :edit }
-          format.json { render json: store.errors, status: :unprocessable_entity }
-        end
-      end
-    end
-  end
-
-  def destroy
-    @store.destroy
-    respond_to do |format|
-      format.html { redirect_to stores_url, notice: 'Store was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
     helper_method :get_merchant_token
     def set_store
-      @store = Store.find(params[:id])
+      @local_store = Store.find(params[:id])
     end
 
     def store_params

@@ -15,6 +15,7 @@ class ClientsController < ApplicationController
     @status_options = ['ACTIVE', 'SUSPENDED', 'TERMINATED']
     if @user_cards['count'] > 0
       funding_source = Card.get_funding_source(@client.user_token)
+      #TODO: resolve occasional bug after new client/user card creation: undefined method `>' for nil:NilClass
       funding_source = funding_source['data'].first if funding_source['count'] > 0
       @transactions = Transaction.get_request("transactions/fundingsource/#{funding_source['token']}")
     end

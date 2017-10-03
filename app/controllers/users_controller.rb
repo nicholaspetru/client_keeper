@@ -14,74 +14,63 @@ class UsersController < ApplicationController
   end
 
   def create
-    @body = {
-      :first_name => params['user']['first_name'],
-      :last_name => params['user']['last_name'],
-      :email => params['user']['email'],
-      :address1 => params['user']['address1'],
-      :city => params['user']['city'],
-      :state => params['user']['state'],
-      :zip => params['user']['zip']
-    }.to_json
+    body = get_user_body
+    response = User.post_request("users/", body)
 
-    @response = User.post_request("users/", @body)
-
-    @user = User.create(
-      first_name: @response['first_name'],
-      last_name: @response['last_name'],
-      email: @response['email'],
-      token: @response['token']
-    ) unless @response['token'].nil?
-
-    unless @response['error_code'].nil?
-      flash[:danger] = @response['error_message']
+    unless response['error_code'].nil?
+      flash[:danger] = response['error_message']
+      redirect_to new_user_path
     else
+      flash[:success] = "New user successfully created (in API). "
+      user = User.create(
+        first_name: response['first_name'],
+        last_name: response['last_name'],
+        email: response['email'],
+        token: response['token']
+      )
       respond_to do |format|
-        if @user.save
-          flash[:success] = "New user successfully created!"
-          format.html { redirect_to @user }
-          format.json { render :show, status: :created, location: @user }
+        if user.save
+          flash[:success] = "New user successfully created (locally)!"
+          format.html { redirect_to user }
+          format.json { render :show, status: :created, location: user }
         else
           format.html { render :new }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
+          format.json { render json: user.errors, status: :unprocessable_entity }
         end
       end
     end
   end
 
   def edit
-    @user = retrieve_user_data(@local_user.token)
+    @user = User.get_request("users/#{@local_user.token}").parsed_response
   end
 
   def update
-    @body = {
-      :first_name => params['user']['first_name'],
-      :last_name => params['user']['last_name'],
-      :email => params['user']['email'],
-      :address1 => params['user']['address1'],
-      :city => params['user']['city'],
-      :state => params['user']['state'],
-      :zip => params['user']['zip']
-    }.to_json
+    body = get_user_body
+    response = User.put_request("users/#{@local_user.token}", body)
 
-    @response = User.put_request("users/#{@local_user.token}", @body)
+    unless response['error_code'].nil?
+      flash[:danger] = response['error_message']
+      redirect_to edit_user_path(local_store)
+    else
+      flash[:success] = "User API successfully udpated."
+      user = User.update(params[:id], {
+        first_name: response['first_name'],
+        last_name: response['last_name'],
+        email: response['email'],
+        token: response['token']
+      })
 
-    @user = User.update(params[:id], {
-      first_name: @response['first_name'],
-      last_name: @response['last_name'],
-      email: @response['email'],
-      token: @response['token']
-    }) unless @response['token'].nil?
-
-    respond_to do |format|
-      if @response['error_code'].nil?
-        flash[:success] = "User successfully updated!"
-        format.html { redirect_to user_path(@user) }
-        format.json { render :show, status: :created, location: @user }
-      else
-        flash[:danger] = @response['error_message']
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if user
+          flash[:success] = "Local user successfully updated!"
+          format.html { redirect_to user_path(user) }
+          format.json { render :show, status: :created, location: user }
+        else
+          flash[:danger] = response['error_message']
+          format.html { render :new }
+          format.json { render json: user.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -94,12 +83,15 @@ class UsersController < ApplicationController
     end
   end
 
-  def get_client_by_token(user_token)
-    Client.where(user_token: user_token, store_token: current_store.token)
-  end
-
-  def retrieve_user_data(user_token)
-    User.get_request("users/#{user_token}").parsed_response
+  def get_user_body
+    { :first_name => params['user']['first_name'],
+      :last_name => params['user']['last_name'],
+      :email => params['user']['email'],
+      :address1 => params['user']['address1'],
+      :city => params['user']['city'],
+      :state => params['user']['state'],
+      :zip => params['user']['zip']
+    }.to_json
   end
 
   private
